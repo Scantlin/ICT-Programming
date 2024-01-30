@@ -2,6 +2,7 @@ import java.util.Scanner;
 public class Game2 {
     static String answer [] = {"Crust", "Mantle", "Core"};
     public static void main(String[] args) {
+        
         Scanner M = new Scanner(System.in);
         print("Welcome to the game \n");
         print("You have three lives and need to answer three questions. You need a perfect score to win");
