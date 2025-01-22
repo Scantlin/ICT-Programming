@@ -1,0 +1,227 @@
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+from tkcalendar import DateEntry
+from datetime import datetime
+from tkinter import PhotoImage, Toplevel, Label, Button
+
+
+from PIL import Image, ImageTk  # Import Pillow for image handling
+
+def submit_form(name_entry, dob_entry, age_entry, place_of_birth_entry, marital_status_combobox, contact_number_entry, address_entry, picture_path=None):
+    response = messagebox.askyesno("Submit Confirmation", "Are you sure you want to submit?")
+    
+    # Capture all form responses
+    name = name_entry.get()
+    dob = dob_entry.get_date()
+    age = age_entry.get()
+    place_of_birth = place_of_birth_entry.get()
+    marital_status = marital_status_combobox.get()
+    contact_number = contact_number_entry.get()
+    address = address_entry.get()
+    
+    # Create a new window for custom confirmation
+    if response:
+        confirmation_window = Toplevel(root)
+        confirmation_window.title("Submission Confirmation")
+        
+        # Set the window size and center it
+        confirmation_window.geometry("500x600")
+        
+        # Display the 2x2 picture at the top
+        if picture_path:
+            try:
+                # Open the image
+                img = Image.open(picture_path)
+                
+                # Resize the image to 2x2 inches (convert to pixels; assume 100 DPI)
+                dpi = 100
+                width, height = int(2 * dpi), int(2 * dpi)
+                img = img.resize((width, height), Image.Resampling.LANCZOS)
+                
+                # Convert to PhotoImage for Tkinter
+                tk_img = ImageTk.PhotoImage(img)
+                
+                img_label = Label(confirmation_window, image=tk_img)
+                img_label.image = tk_img  # Keep a reference to avoid garbage collection
+                img_label.pack(pady=10)
+            except Exception as e:
+                messagebox.showerror("Image Error", f"Failed to load the image: {e}")
+        
+        # Display form responses below the image
+        response_label = Label(confirmation_window, text="Your Submission:", font=("Helvetica", 14, "bold"))
+        response_label.pack(pady=5)
+        
+        details = (
+            f"Name: {name}\n"
+            f"Date of Birth: {dob.strftime('%Y-%m-%d')}\n"
+            f"Age: {age}\n"
+            f"Place of Birth: {place_of_birth}\n"
+            f"Marital Status: {marital_status}\n"
+            f"Contact Number: {contact_number}\n"
+            f"Address: {address}"
+        )
+        
+        details_label = Label(confirmation_window, text=details, font=("Helvetica", 12))
+        details_label.pack(pady=10)
+        
+        # Confirmation button to close the window
+        close_button = Button(confirmation_window, text="Close", command=confirmation_window.destroy)
+        close_button.pack(pady=20)
+        
+    else:
+        messagebox.showinfo("Cancelled", "Form submission cancelled.")
+def calculate_age(dob_entry, age_entry):
+    dob = dob_entry.get_date()
+    today = datetime.today()
+    age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    age_entry.delete(0, tk.END)
+    age_entry.insert(0, str(age))
+
+def create_tkinter_form():
+    global root
+    # Main window
+    root = tk.Tk()
+    root.title("Certificate of Candidacy")
+    root.geometry("750x700")
+
+    # Scroll Bar
+    canvas = tk.Canvas(root)
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollable_frame = tk.Frame(canvas)
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    # Title
+    tk.Label(scrollable_frame, text="CERTIFICATE OF CANDIDACY", font=("Helvetica", 16, "bold")).pack(pady=10)
+
+    # Personal Information Section
+    personal_frame = tk.LabelFrame(scrollable_frame, text="I. PERSONAL INFORMATION", font=("Helvetica", 12, "bold"), padx=10, pady=10)
+    personal_frame.pack(fill="x", padx=10, pady=5)
+
+    tk.Label(personal_frame, text="Name of Candidate* (Last Name, Given Name, Middle Name):").grid(row=0, column=0, sticky="w", pady=2, padx=5)
+    name_entry = tk.Entry(personal_frame, width=45)
+    name_entry.grid(row=0, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Latest Mailing Address*:").grid(row=1, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(personal_frame, width=45).grid(row=1, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="CONTACT INFORMATION", font=("Helvetica", 10, "bold")).grid(row=2, column=0, sticky="w", pady=5)
+    tk.Label(personal_frame, text="Mobile Number*").grid(row=3, column=0, sticky="w", pady=2, padx=5)
+    contact_number_entry = tk.Entry(personal_frame, width=45)
+    contact_number_entry.grid(row=3, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Telephone Number").grid(row=4, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(personal_frame, width=45).grid(row=4, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Email Address*").grid(row=5, column=0, sticky="w", pady=2, padx=5)
+    address_entry = tk.Entry(personal_frame, width=45)
+    address_entry.grid(row=5, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Date of Birth*:").grid(row=6, column=0, sticky="w", pady=2, padx=5)
+    dob_entry = DateEntry(personal_frame, width=45, date_pattern="yyyy-mm-dd")
+    dob_entry.grid(row=6, column=1, padx=5, sticky="w")
+    dob_entry.bind("<<DateEntrySelected>>", lambda event: calculate_age())  # Bind to calculate age when date is selected
+
+    tk.Label(personal_frame, text="Age:").grid(row=7, column=0, sticky="w", pady=2, padx=5)
+    age_entry = tk.Entry(personal_frame, width=15)
+    age_entry.grid(row=7, column=1, padx=5, sticky="w")
+
+    dob_entry.bind("<<DateEntrySelected>>", lambda event: calculate_age(dob_entry, age_entry))
+
+    tk.Label(personal_frame, text="Place of Birth:").grid(row=8, column=0, sticky="w", pady=2, padx=5)
+    place_of_birth_entry = tk.Entry(personal_frame, width=45)
+    place_of_birth_entry.grid(row=8, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Marital Status:").grid(row=9, column=0, sticky="w", pady=2, padx=5)
+    marital_status_combobox = ttk.Combobox(personal_frame, values=["Single", "Married", "Divorced", "Widowed"])
+    marital_status_combobox.grid(row=9, column=1, padx=5, sticky="w")
+
+    tk.Label(personal_frame, text="Name of Spouse (if applicable):").grid(row=10, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(personal_frame, width=45).grid(row=10, column=1, padx=5, sticky="w")
+
+    picture_path = None
+
+    def upload_picture():
+        nonlocal picture_path
+        file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
+        if file_path:
+            picture_path = file_path
+            messagebox.showinfo("Picture Uploaded", f"Picture uploaded: {file_path}")
+
+    tk.Label(personal_frame, text="2x2 Picture:").grid(row=11, column=0, sticky="w", pady=2, padx=5)
+    tk.Button(personal_frame, text="Upload Picture", command=upload_picture).grid(row=11, column=1, sticky="w")
+
+    # Educational Attainment Section
+    education_frame = tk.LabelFrame(scrollable_frame, text="II. EDUCATIONAL ATTAINMENT", font=("Helvetica", 12, "bold"), padx=10, pady=10)
+    education_frame.pack(fill="x", padx=10, pady=5)
+    
+    tk.Label(education_frame, text=f"School").grid(row=0, column=1, sticky="w", pady=2, padx=5)
+    tk.Label(education_frame, text="Course/Degree:").grid(row=0, column=3, sticky="w", pady=2, padx=5)
+    tk.Label(education_frame, text="Year Graduated:").grid(row=0, column=5, sticky="w", pady=2, padx=5)
+
+    for i in range(4):
+        tk.Entry(education_frame, width=50).grid(row=i+1, column=1, padx=10)
+        tk.Entry(education_frame, width=30).grid(row=i+1, column=3, padx=10)
+        tk.Entry(education_frame, width=20).grid(row=i+1, column=5, padx=10)
+
+    # Employment Section
+    employment_frame = tk.LabelFrame(scrollable_frame, text="III. EMPLOYMENT", font=("Helvetica", 12, "bold"), padx=10, pady=10)
+    employment_frame.pack(fill="x", padx=10, pady=5)
+
+    tk.Label(employment_frame, text="Active PCG Personnel:").grid(row=0, column=0, sticky="w", pady=2, padx=5)
+    ttk.Checkbutton(employment_frame).grid(row=0, column=1, sticky="w", padx=5)
+
+    tk.Label(employment_frame, text="Retired PCG Personnel:").grid(row=1, column=0, sticky="w", pady=2, padx=5)
+    ttk.Checkbutton(employment_frame).grid(row=1, column=1, sticky="w", padx=5)
+
+    tk.Label(employment_frame, text="If Active, ( please specify):").grid(row=2, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=2, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Present Rank and Position:").grid(row=3, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=3, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Unit Assignment:").grid(row=4, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=4, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="If Retired, ( please specify):").grid(row=5, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=5, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Name of Employer/Business:").grid(row=6, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=6, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Position:").grid(row=7, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=7, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Address of Employer:").grid(row=8, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=8, column=1, padx=5, sticky="w")
+
+    tk.Label(employment_frame, text="Contact Number:").grid(row=9, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(employment_frame, width=40).grid(row=9, column=1, padx=5, sticky="w")
+
+    # Membership Section
+    membership_frame = tk.LabelFrame(scrollable_frame, text="IV. MEMBERSHIP", font=("Helvetica", 12, "bold"), padx=10, pady=10)
+    membership_frame.pack(fill="x", padx=10, pady=5)
+
+    tk.Label(membership_frame, text="Are you a regular member in good standing of the PCGSLA?").grid(row=0, column=0,sticky="w", pady=2, columnspan=2)
+    tk.Label(membership_frame, text="YES:").grid(row=1, column=0, sticky="w", pady=2, padx=5)
+    ttk.Checkbutton(membership_frame).grid(row=1, column=1, sticky="w", padx=2)
+    tk.Label(membership_frame, text="NO:").grid(row=2, column=0, sticky="w", pady=2, padx=5)
+    ttk.Checkbutton(membership_frame).grid(row=2, column=1, sticky="w", padx=2)
+    tk.Label(membership_frame, text="Specify date of membership:").grid(row=3, column=0, sticky="w", pady=2, padx=5)
+    tk.Entry(membership_frame, width=20).grid(row=3, column=1, padx=5, sticky="w")
+
+    # Submit Button
+    submit_button = tk.Button(scrollable_frame, text="Submit", font=("Helvetica", 12, "bold"), command=lambda: submit_form(name_entry, dob_entry, age_entry, place_of_birth_entry, marital_status_combobox, contact_number_entry, address_entry, picture_path))
+    submit_button.pack(pady=20)
+
+    root.mainloop()
+
+create_tkinter_form()
