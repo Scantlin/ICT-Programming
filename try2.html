@@ -1,0 +1,34 @@
+# Save this as tkinter_web.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tkinter in Browser</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+</head>
+<body>
+    <h1>Tkinter Simulation in Browser</h1>
+    <div id="output"></div>
+    <script>
+        async function main() {
+            let pyodide = await loadPyodide();
+            await pyodide.loadPackage("micropip");
+            await pyodide.runPythonAsync(`
+                import micropip
+                await micropip.install('tkinter')
+                
+                import tkinter as tk
+                from tkinter import ttk
+                
+                root = tk.Tk()
+                root.title("Web Tkinter")
+                label = ttk.Label(root, text="Hello in Browser!")
+                label.pack()
+                button = ttk.Button(root, text="Click", command=lambda: label.config(text="Clicked!"))
+                button.pack()
+                root.mainloop()
+            `);
+        }
+        main();
+    </script>
+</body>
+</html>
