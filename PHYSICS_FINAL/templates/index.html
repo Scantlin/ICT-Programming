@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Waves | Group 3 Final Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='waves.js') }}" defer></script>
+    <style>
+        /* Initial canvas sizing to prevent layout shift */
+        #waveCanvas {
+            width: 100%;
+            height: 300px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ComSiMWave</h1>
+            <h2>Computational Simulation of Mechanical Wave</h2>
+            <button id="darkModeToggle">🌓 Dark Mode</button>
+        </header>
+
+        <div class="content">
+            <section class="wave-visualization">
+                <h3>Interactive Wave Generator</h3>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="waveType">Waves Type:</label>
+                        <select id="waveType">
+                            <option value="transverse">Transverse Wave</option>
+                            <option value="longitudinal">Longitudinal Wave</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="amplitude">Amplitude:</label>
+                        <input type="range" id="amplitude" min="1" max="50" value="20">
+                        <span id="amplitudeValue">20</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Frequency (Hz):</label>
+                        <input type="range" id="frequency" min="0.1" max="5" step="0.1" value="1">
+                        <span id="frequencyValue">1</span>
+                    </div>
+                    <div class="control-group">
+                        <label>Wavelength:</label>
+                        <input type="range" id="wavelength" min="20" max="200" value="100">
+                        <span id="wavelengthValue">100</span>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="waveCanvas" width="800" height="300"></canvas>
+                    <p class="canvas-instruction">Click on the wave to pause/play. Click and drag to interact with transverse waves.</p>
+                </div>
+                <div class="flow-control-container">
+
+        <div class="medium-controls">
+    <h4>Wave Medium:</h4>
+    <div class="medium-buttons">
+        <button id="solidBtn">Solid</button>
+        <button id="liquidBtn">Liquid</button>
+        <button id="gasBtn">Gas</button>
+    </div>
+    <div id="waveSpeedLabel" class="wave-speed-label"></div>
+    </div>
+    </div>
+            </section>
+
+            <section class="wave-calculations">
+                <h3>Wave Properties Calculator</h3>
+                <div class="calculation-form">
+                    <div class="input-group">
+                        <label for="calcWavelength">Wavelength (m):</label>
+                        <input type="number" id="calcWavelength" step="0.01" value="1.0">
+                    </div>
+                    <div class="input-group">
+                        <label for="calcFrequency">Frequency (Hz):</label>
+                        <input type="number" id="calcFrequency" step="0.01" value="1.0">
+                    </div>
+                    <div class="input-group">
+                        <label for="calcAmplitude">Amplitude (m):</label>
+                        <input type="number" id="calcAmplitude" step="0.01" value="0.5">
+                    </div>
+                    <button id="calculateBtn">Calculate Wave Properties</button>
+                </div>
+                <div class="results">
+                    <h4>Calculation Results:</h4>
+                    <div id="resultsContainer">
+                        <p>Enter values and click calculate to see results</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="applications">
+                <h3>Real-Life Applications of Mechanical Waves</h3>
+                <div class="applications-grid">
+                    <div class="application-card">
+                        <h4>Medical Ultrasound</h4>
+                        <p>High-frequency sound waves create images of internal organs by measuring wave reflections.</p>
+                        <div class="frequency-display" data-freq="2e6">2 MHz</div>
+                    </div>
+                    <div class="application-card">
+                        <h4>Earthquake Detection</h4>
+                        <p>Seismographs detect P-waves and S-waves to determine earthquake epicenters.</p>
+                        <div class="frequency-display" data-freq="0.1">0.1-10 Hz</div>
+                    </div>
+                    <div class="application-card">
+                        <h4>Musical Instruments</h4>
+                        <p>String vibrations create standing waves that produce musical notes.</p>
+                        <div class="frequency-display" data-freq="440">440 Hz (A4)</div>
+                    </div>
+                    <div class="application-card">
+                        <h4>Sonar Technology</h4>
+                        <p>Sound waves detect underwater objects by measuring echo return times.</p>
+                        <div class="frequency-display" data-freq="50000">50 kHz</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wave-info">
+                <h3>About Mechanical Waves</h3>
+                <div class="info-content">
+                    <div>
+                        <p>Mechanical waves require a medium (solid, liquid, or gas) to propagate. There are two main types:</p>
+                        <ul>
+                            <li><strong>Transverse waves:</strong> Particles move perpendicular to wave direction (e.g., waves on a string)</li>
+                            <li><strong>Longitudinal waves:</strong> Particles move parallel to wave direction (e.g., sound waves)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p>Key wave properties include:</p>
+                        <ul>
+                            <li>Amplitude (A) - Maximum displacement from equilibrium</li>
+                            <li>Wavelength (λ) - Distance between consecutive peaks</li>
+                            <li>Frequency (f) - Number of oscillations per second</li>
+                            <li>Period (T) - Time for one complete oscillation (T = 1/f)</li>
+                            <li>Wave speed (v) - Speed of wave propagation (v = λf)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="doppler-section">
+    <h3>Doppler Effect Simulation</h3>
+    <div class="doppler-controls">
+        <div class="control-group">
+            <label for="dopplerSourceSpeed">Source Speed:</label>
+            <input type="range" id="dopplerSourceSpeed" min="0" max="100" value="0">
+            <span id="dopplerSourceSpeedValue">0 m/s</span>
+        </div>
+        <div class="control-group">
+            <label for="dopplerObserverSpeed">Observer Speed:</label>
+            <input type="range" id="dopplerObserverSpeed" min="-50" max="50" value="0">
+            <span id="dopplerObserverSpeedValue">0 m/s</span>
+        </div>
+        <div class="control-group">
+            <label for="dopplerWaveSpeed">Wave Speed:</label>
+            <input type="range" id="dopplerWaveSpeed" min="100" max="500" value="343">
+            <span id="dopplerWaveSpeedValue">343 m/s</span>
+        </div>
+        <div class="control-group">
+            <label for="dopplerSourceFreq">Source Frequency:</label>
+            <input type="range" id="dopplerSourceFreq" min="100" max="1000" value="440">
+            <span id="dopplerSourceFreqValue">440 Hz</span>
+        </div>
+    </div>
+    <div class="doppler-visualization">
+        <canvas id="dopplerCanvas" width="800" height="200"></canvas>
+        <div class="doppler-animation-container">
+            <div class="source" id="dopplerSource">🚗</div>
+            <div class="observer" id="dopplerObserver">👂</div>
+        </div>
+    </div>
+    <div class="doppler-results">
+        <div class="result-item">
+            <span class="result-label">Observed Frequency:</span>
+            <span class="result-value" id="observedFreq">440 Hz</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Frequency Change:</span>
+            <span class="result-value" id="freqChange">0 Hz (0%)</span>
+        </div>
+    </div>
+</section>
+<section class="group-members">
+                <h3>Group Members</h3>
+                <div class="members-list">
+                    <ol>
+                        <li>Cayson, John Scantlin</li>
+                        <li>Cortez, Micaella</li>
+                        <li>Justo, Justin</li>
+                        <li>Laurente, Leojen</li>
+                        <li>Molino, Kurt</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Group 3 Final Project | Physics of Waves | © 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
