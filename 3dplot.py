@@ -1,4 +1,4 @@
-import numpy as np
+import data_read as np
 import plotly.graph_objects as go
 
 # Dark mode color scheme
