@@ -1,0 +1,33 @@
+%a	Weekday (short)	Mon, Tue
+%A	Weekday (full)	Monday, Tuesday
+%w	Weekday (number, 0=Sunday)	0 (Sun), 1 (Mon)
+%d	Day of month (zero-padded)	01, 02, ..., 31
+%b	Month (short)	Jan, Feb
+%B	Month (full)	January, February
+%m	Month (number, zero-padded)	01, 02, ..., 12
+%y	Year (2-digit)	23 (for 2023)
+%Y	Year (4-digit)	2023, 2024
+%j	Day of year (001-366)	001, 365
+%U	Week number (Sunday first, 00-53)	00 to 53
+%W	Week number (Monday first, 00-53)	00 to 53
+Time Format Codes
+
+Code	Meaning	Example
+%H	Hour (24-hour, zero-padded)	00, 01, ..., 23
+%I	Hour (12-hour, zero-padded)	01, 02, ..., 12
+%p	AM/PM	AM, PM
+%M	Minute (zero-padded)	00, 01, ..., 59
+%S	Second (zero-padded)	00, 01, ..., 59
+%f	Microsecond (zero-padded)	000000, 000001, ..., 999999
+%z	UTC offset (e.g., +0500)	+0000, -0400
+%Z	Timezone name	UTC, EST, PST
+Combined Date & Time Codes
+
+Code	Meaning	Example
+%c	Locale date & time	Mon Jun 17 14:55:02 2024
+%x	Locale date	06/17/24 (US format)
+%X	Locale time	14:55:02
+Special Characters
+
+Code	Meaning
+%%	Literal % character

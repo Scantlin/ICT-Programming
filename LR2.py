@@ -4,8 +4,12 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from datetime import datetime
+import pytz
 
 def main():
+    time_zone = pytz.timezone('Asia/Manila')
+    time = datetime.now(time_zone).strftime('%d-%m-%y %H:%M')
     data = {
         "Size": [21, 37, 43, 51],
         "Price": [200, 700, 900, 1000],
@@ -44,6 +48,7 @@ def main():
     d3.plot_surface(size, Price, Sales, color='orange', alpha=0.3, label='Regression Plane')
     
     # Set labels
+    d3.text(0,0,0, s=f'saved: {time}', transform = d3.transAxes, va='bottom', ha='right')
     d3.set_xlabel('Size')
     d3.set_ylabel('Price')
     d3.set_zlabel('Sales')
@@ -55,6 +60,7 @@ def main():
     plt.savefig('LR2.png')
     plt.tight_layout()
     plt.show()
+    print('Success Operation')
 
 if __name__ == '__main__':
     main()
