@@ -31,3 +31,9 @@ Special Characters
 
 Code	Meaning
 %%	Literal % character
+
+| Concept                | Axis 1            | Axis 2         | Use Case                            |
+| ---------------------- | ----------------- | -------------- | ----------------------------------- |
+| **Perfect Fit**        | Feature (X)       | Prediction (ŷ) | Show model fitting a single feature |
+| **Perfect Prediction** | Actual Target (y) | Prediction (ŷ) | Evaluate how accurate the model is  |
+
