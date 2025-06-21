@@ -3,8 +3,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
 import pandas as pd
+from datetime import datetime
+import pytz
 
 def main():
+    time_zone = pytz.timezone('Asia/Manila')
+    Time = datetime.now(time_zone).strftime('%d-%m-%y %H:%M')
     data = pd.read_csv('Salary_dataset.csv')
     X = data[['YearsExperience']]
     y = data['Salary']
@@ -33,6 +37,7 @@ def main():
 
     print(f'TRAIN MAE: {Train_MAE:.2f} R2_TRAIN: {r2_train:.2f}')
     print(f'TEST MAE : {Test_MAE:.2f} R2_TEST: {r2_test:.2f}')
-
+    print(Time)
+    
 if __name__ == '__main__':
     main()
