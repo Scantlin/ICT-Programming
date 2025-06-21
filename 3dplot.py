@@ -1,5 +1,6 @@
 import data_read as np
 import plotly.graph_objects as go
+from sklearn.linear_model import LinearRegression
 
 # Dark mode color scheme
 DARK_MODE = {
