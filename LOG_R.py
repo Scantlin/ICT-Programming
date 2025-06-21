@@ -1,36 +1,46 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
+import numpy as numpy
+import pandas as pd
+import matplotlib.pyplot as pyplot
+from datetime import datetime
+import pytz
 
-# Hours studied (input feature)
-hours_studied = np.array([0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]).reshape(-1, 1)
+def main():
+    Time_zone = pytz.timezone('Asia/Manila')
+    time = datetime.now(Time_zone).strftime('%d-%m-%y %H:%M')
+    data = {
+        "Number of sleep": [6, 5, 8, 9, 3, 4, 2, 2, 1, 7],
+        "Hours of Review": [3, 4, 2, 1, 6, 5, 7, 7, 8, 2],
+        "Result": [1, 1, 0, 0, 1, 1, 1, 1, 1, 0] #1 Passed 0 Failed
+    }
 
-# Pass (1) or fail (0) (target variable)
-exam_result = np.array([0, 0, 0, 0, 1, 0, 1, 1, 1, 1])
+    dataframe = pd.DataFrame(data)
 
-model = LogisticRegression().fit(hours_studied, exam_result)
+    Independent_var = dataframe[["Number of sleep", "Hours of Review"]]
+    Dependent_var = dataframe["Result"]
 
-#Predict for new Data
-list_of_prediction = np.array([1.2, 1.9, 2.8, 3]).reshape(-1, 1)
-prediction = model.predict(list_of_prediction)
+    sample = {
+        "Number of sleep": [10, 7, 0],
+        "Hours of Review": [0, 2, 9]
+    }
 
-print(prediction)
+    sample = pd.DataFrame(sample)
+    sample = sample[["Number of sleep", "Hours of Review"]]
 
-# Plot the data points
-plt.scatter(hours_studied, exam_result, color='blue', label='Actual data')
+    model = LogisticRegression().fit(Independent_var, Dependent_var)
+    prediction = model.predict(sample)
+    interpretation = []
 
-# Create a range of values for plotting the curve
-x_values = np.linspace(0, 5, 100).reshape(-1, 1)
-y_proba = model.predict_proba(x_values)[:, 1]
+    for i in range(len(prediction)):
+        if prediction[i] == 1:
+            interpretation.append('Passed')
+        else:
+            interpretation.append('Failed')
 
-# Plot the logistic regression curve
-plt.plot(x_values, y_proba, color='red', label='Logistic regression curve')
+    for i in range(len(interpretation)):
+        print(f'Number of sleep: {sample["Number of sleep"][i]} Hours of review: {sample["Hours of Review"][i]} result: {interpretation[i]}')
+        
+    print(time)
 
-plt.xlabel('Hours Studied')
-plt.ylabel('Probability of Passing')
-plt.title('Logistic Regression Example')
-plt.legend()
-plt.savefig('LOG_R.png')
-plt.show()
-
-print('Done')
+if __name__ == '__main__':
+    main()
