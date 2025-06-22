@@ -10,8 +10,8 @@ def main():
     time = datetime.now(Time_zone).strftime('%d-%m-%y %H:%M')
     data = {
         "Number of sleep": [6, 5, 8, 9, 3, 4, 2, 2, 1, 7],
-        "Hours of Review": [3, 4, 2, 1, 6, 5, 7, 7, 8, 2],
-        "Result": [1, 1, 0, 0, 1, 1, 1, 1, 1, 0] #1 Passed 0 Failed
+        "Hours of Review": [3, 4, 2, 1, 6, 5, 7, 7, 8, 3],
+        "Result": [1, 1, 0, 0, 1, 1, 1, 0, 0, 1] #1 Passed 0 Failed
     }
 
     dataframe = pd.DataFrame(data)
@@ -20,8 +20,8 @@ def main():
     Dependent_var = dataframe["Result"]
 
     sample = {
-        "Number of sleep": [10, 7, 0],
-        "Hours of Review": [0, 2, 9]
+        "Number of sleep": [1, 7, 0],
+        "Hours of Review": [11, 2, 9]
     }
 
     sample = pd.DataFrame(sample)
