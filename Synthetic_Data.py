@@ -6,6 +6,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
+from scipy import stats
+import statsmodels.formula.api as smf
 
 def main():
     dataset = {
@@ -25,6 +28,13 @@ def main():
     Independent_var = dataframe[["Average_Pulse"]]
     Dependent_var = dataframe["Calorie_Burnage"]
 
+    #Regression Table 
+    model = smf.ols('Calorie_Burnage ~Average_Pulse', data=dataframe).fit()
+    print(model.summary())
+
+    slope, intercept, r, p, std_err = stats.linregress(dataframe["Average_Pulse"], dataframe["Calorie_Burnage"])
+    print(f'slope: {slope} intercept: {intercept} r: {r} std_error: {std_err}')
+
     X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.2, random_state=0)
 
     model = LinearRegression().fit(X_train, y_train)
@@ -35,12 +45,17 @@ def main():
     #print(f'TEST MAE: {mean_absolute_error(y_train, y_pred_train)} R2: {r2_score(y_test, y_pred_test)}')
     #rint(dataframe.describe())
     
+    #SEABORN HEATMAP
+    correlation = dataframe.corr()
+    axis = sns.heatmap(correlation, vmin=-1, vmax=1, center=0, cmap=sns.diverging_palette(50, 500, n=500), square=True)
+    plt.savefig('Sample Test.png')
+    plt.show()
     '''
     plt.style.use('dark_background')
     plt.figure(figsize=(8, 5))
-    plt.scatter(dataframe['Average_Pulse'], dataframe['Calorie_Burnage'], color='red', marker="*")
-    plt.plot(dataframe['Average_Pulse'], dataframe['Calorie_Burnage'])
-    plt.xlabel('Average_Pulse')
+    plt.scatter(dataframe['Hours_Work'], dataframe['Calorie_Burnage'], color='red', marker="*")
+    #plt.plot(dataframe['Average_Pulse'], dataframe['Calorie_Burnage'])
+    plt.xlabel('Hours_Work')
     plt.title('Sample Test')
     plt.ylabel('Calorie_Burnage')
     plt.savefig('Sample Test.png')
