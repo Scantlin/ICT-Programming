@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, confusion_matrix, mean_absolute_error
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestRegressor
 
 import warnings
 
@@ -29,30 +30,29 @@ def main():
         y = dataframe["Price"]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
 
-        #TRANSFORM the X_TRAIN AND TEST SINCE IT HAS CATEGORY
-        preprocessor = ColumnTransformer(transformers=[("neighborhood", OneHotEncoder(drop="first"), ["Neighborhood"])], remainder='passthrough')
-        X_train_encoded = preprocessor.fit_transform(X_train)
-        X_test_encoded = preprocessor.transform(X_test)
+        Categorical_var = dataframe.select_dtypes(include=['object']).columns.tolist()
+        #print(Categorical_var)
 
-        model = LinearRegression().fit(X_train_encoded, y_train)
+        #TRANSFORM the X_TRAIN AND TEST SINCE IT HAS CATEGORY
+        encoder = ColumnTransformer(transformers=[('categorical', OneHotEncoder(), Categorical_var)], remainder='passthrough')
+        X_train_encoded = encoder.fit_transform(X_train)
+        X_test_encoded = encoder.transform(X_test)
+
+        #model = LinearRegression().fit(X_train_encoded, y_train)
+        model = RandomForestRegressor().fit(X_train_encoded, y_train)
 
         y_pred_train = model.predict(X_train_encoded) #Actual Data
         y_pred_test = model.predict(X_test_encoded)
 
-        print(f'XTrain are {X_train_encoded} \nXTest are {X_test_encoded}')
-        print(f'yTrain are {y_pred_train} \nyTest {y_pred_test}')
-
         #MSE
-        Train_mse = mean_squared_error(y_train, y_pred_train)
-        Test_mse = mean_squared_error(y_test, y_pred_test)
+        Test_mse = mean_absolute_error(y_test, y_pred_test)
 
         #R2
-        Train_R2 = r2_score(y_train, y_pred_train)
-        Test_R2 = r2_score(y_test, y_pred_test)
+        Test_r2 = r2_score(y_test, y_pred_test)
 
-        print(f'TRAIN: MSE {Train_mse:.2f} R2 {Train_R2:.2f}')
-        print(f'TEST: MSE {Test_mse:.2f} R2 {Test_R2:.2f}')
-        #print(f'Coef_ {dict(zip(X.columns, model.coef_))}' )
+        print(round(Test_mse, 2))
+        print('{:.2f}'.format(Test_r2) * 100)
+
 
     except Exception as e:
         print(e)

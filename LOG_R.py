@@ -1,4 +1,7 @@
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 import numpy as numpy
 import pandas as pd
 import matplotlib.pyplot as pyplot
@@ -16,31 +19,33 @@ def main():
 
     dataframe = pd.DataFrame(data)
 
-    Independent_var = dataframe[["Number of sleep", "Hours of Review"]]
-    Dependent_var = dataframe["Result"]
+    Independent_var = dataframe.iloc[:, :-1]
+    Depedendent_var = dataframe.iloc[:, -1]
+
+    X_train, X_test, y_train, y_test = train_test_split(Independent_var, Depedendent_var, test_size=0.2, random_state=42)
 
     sample = {
         "Number of sleep": [1, 7, 0],
         "Hours of Review": [11, 2, 9]
     }
 
-    sample = pd.DataFrame(sample)
-    sample = sample[["Number of sleep", "Hours of Review"]]
+    sample_df = pd.DataFrame(sample)
+    sample = sample_df[["Number of sleep", "Hours of Review"]]
 
-    model = LogisticRegression().fit(Independent_var, Dependent_var)
-    prediction = model.predict(sample)
-    interpretation = []
+    #model = LogisticRegression().fit(X_train, y_train)
+    model = RandomForestClassifier(criterion='gini', random_state=42).fit(X_train, y_train)
+    sample_prediction = model.predict(sample)
 
-    for i in range(len(prediction)):
-        if prediction[i] == 1:
-            interpretation.append('Passed')
+    print(sample_prediction)
+
+    for i, order in enumerate (sample_prediction):
+        if order == 1:
+            print(f'number of sleep is {sample["Number of sleep"][i]}, Hours Review is {sample["Hours of Review"][i]}, result: Passed')
+        elif order == 0:
+            print(f'number of sleep is {sample["Number of sleep"][i]}, Hours Review is {sample["Hours of Review"][i]}, result: Failed')
         else:
-            interpretation.append('Failed')
+            print('Error')
 
-    for i in range(len(interpretation)):
-        print(f'Number of sleep: {sample["Number of sleep"][i]} Hours of review: {sample["Hours of Review"][i]} result: {interpretation[i]}')
-        
-    print(time)
 
 if __name__ == '__main__':
     main()
