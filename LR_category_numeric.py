@@ -28,18 +28,15 @@ def main():
         #SPLIT THE DATA
         X = dataframe[["Size", "Bedrooms", "Neighborhood"]]
         y = dataframe["Price"]
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
-
-        Categorical_var = dataframe.select_dtypes(include=['object']).columns.tolist()
-        #print(Categorical_var)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         #TRANSFORM the X_TRAIN AND TEST SINCE IT HAS CATEGORY
         encoder = ColumnTransformer(transformers=[('categorical', OneHotEncoder(), Categorical_var)], remainder='passthrough')
         X_train_encoded = encoder.fit_transform(X_train)
         X_test_encoded = encoder.transform(X_test)
 
-        #model = LinearRegression().fit(X_train_encoded, y_train)
-        model = RandomForestRegressor().fit(X_train_encoded, y_train)
+        print(X_train_encoded)
+        model = LinearRegression().fit(X_train_encoded, y_train)
 
         y_pred_train = model.predict(X_train_encoded) #Actual Data
         y_pred_test = model.predict(X_test_encoded)
