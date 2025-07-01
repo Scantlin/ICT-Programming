@@ -30,15 +30,15 @@ def main():
         y = dataframe["Price"]
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+        Categorical_var = dataframe.select_dtypes(include=['object']).columns.tolist()
+
         #TRANSFORM the X_TRAIN AND TEST SINCE IT HAS CATEGORY
         encoder = ColumnTransformer(transformers=[('categorical', OneHotEncoder(), Categorical_var)], remainder='passthrough')
         X_train_encoded = encoder.fit_transform(X_train)
         X_test_encoded = encoder.transform(X_test)
 
-        print(X_train_encoded)
         model = LinearRegression().fit(X_train_encoded, y_train)
 
-        y_pred_train = model.predict(X_train_encoded) #Actual Data
         y_pred_test = model.predict(X_test_encoded)
 
         #MSE
@@ -48,7 +48,7 @@ def main():
         Test_r2 = r2_score(y_test, y_pred_test)
 
         print(round(Test_mse, 2))
-        print('{:.2f}'.format(Test_r2) * 100)
+        print(round(Test_r2*100, 2))
 
 
     except Exception as e:
