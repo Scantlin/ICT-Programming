@@ -1,8 +1,9 @@
-from sklearn.model_selection import train_test_split #To split the data
+from sklearn.model_selection import train_test_split, GridSearchCV #To split the data
 from sklearn.ensemble import RandomForestRegressor #To create a model using random forest
 from sklearn.metrics import r2_score, mean_absolute_error #To see the accuracy
 from sklearn.preprocessing import OneHotEncoder #To convert categorical data into numerical
 from sklearn.compose import ColumnTransformer #Upon convertion it is necessary to make it array
+from sklearn.linear_model import LinearRegression
 import numpy as np 
 import pandas as pd #To access the data frame
 from scipy import stats
@@ -51,8 +52,16 @@ class Main:
             X_train_encoded = encoding.fit_transform(X_train)
             X_test_encoded = encoding.transform(X_test)
 
+            #Creating the grid search CV to find the best hyperparameters
+            parameter_grid = {
+                'n_estimators': [100, 200, 300],
+                'max_depth': [None, 10, 20, 30],
+                'min_samples_split': [2, 5, 10],
+                'max_features': ['sqrt', 'log2']
+            }
+
             #Creating a model
-            Model = RandomForestRegressor().fit(X_train_encoded, y_train)
+            Model = GridSearchCV(RandomForestRegressor(), parameter_grid, cv=5).fit(X_train_encoded, y_train)
             y_pred = Model.predict(X_test_encoded)
 
             error = abs(y_test - y_pred)
@@ -65,6 +74,7 @@ class Main:
             }
             print(Analysis)
             print(mean_absolute_error(y_test, y_pred))
+            print(r2_score(y_test, y_pred) * 100)
 
         except Exception as e:
             print(e)
