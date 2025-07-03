@@ -14,7 +14,6 @@ def main():
 
     model = LinearRegression().fit(independent_var, dependent_var)
 
-
     plt.style.use('dark_background')
     fig = plt.figure() #make it on the outside of looping to avoid complication
 

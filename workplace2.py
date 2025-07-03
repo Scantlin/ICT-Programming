@@ -1,43 +1,44 @@
-import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV, train_test_split
+import seaborn as sns
+import numpy as np 
 import pandas as pd
-from datetime import datetime
-import pytz
+from tqdm import tqdm
+import time
 
-def main():
-    time_zone = pytz.timezone('Asia/Manila')
-    Time = datetime.now(time_zone).strftime('%d-%m-%y %H:%M')
-    data = pd.read_csv('Salary_dataset.csv')
-    X = data[['YearsExperience']]
-    y = data['Salary']
+class Main:
+    def main(self):
+        try:
+            '''
+            for i in tqdm(range(10)):
+                time.sleep(1) '''
+                
+            data = sns.load_dataset('iris')
 
-    #Split Dataset into Train and Test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-    
-    #Create a model
-    model = LinearRegression().fit(X_train, y_train)
+            Independent_var = data.iloc[:, :-1]
+            Dependendent_var = data.iloc[:, -1]
 
-    y_pred_train = model.predict(X_train) #Prediction for Y train, or the dataset that we have
-    y_pred_test = model.predict(X_test)
+            X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependendent_var, test_size=0.2, random_state=42)
 
-    error = {
-        'Y test': y_test,
-        'Y Prediction Test': y_pred_test,
-        'Error': y_test-y_pred_test
-    }
-    print(error)
+            '''
+            scaler = StandardScaler()
+            X_train_scaled = scaler.fit_transform(X_train)'''
 
-    Train_MAE = mean_absolute_error(y_train, y_pred_train)
-    r2_train = r2_score(y_train, y_pred_train)
+            model = RandomForestClassifier(criterion='gini', random_state=42).fit(X_train, y_train)
 
-    Test_MAE = mean_absolute_error(y_test, y_pred_test)
-    r2_test = r2_score(y_test, y_pred_test)
+            y_pred = model.predict(X_train)
 
-    print(f'TRAIN MAE: {Train_MAE:.2f} R2_TRAIN: {r2_train:.2f}')
-    print(f'TEST MAE : {Test_MAE:.2f} R2_TEST: {r2_test:.2f}')
-    print(Time)
-    
+            for i, datas in enumerate(model.feature_importances_):
+                print(f'{X_train.columns[i]}: {datas}')
+
+            #print(model.feature_importances_.argsort()[::-1])
+        except Exception as e:
+            print(e)
+
+        finally:
+            print('Thank you for using the program')
+
 if __name__ == '__main__':
-    main()
+    Main().main()

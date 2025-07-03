@@ -45,6 +45,8 @@ class Main:
             #Split the dataframe into Train and Test
             X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.2, random_state=42)
 
+            print(X_train_scaled)
+                        
             #Transformed the categorical Data into Numerical Data but in a Binary way since the data are nominal
             Categorical_var = dataframe.select_dtypes(include=['object']).columns.tolist()
             encoding = ColumnTransformer(transformers=[('cat', OneHotEncoder(sparse_output=False), Categorical_var)], remainder='passthrough', verbose_feature_names_out=False)
@@ -52,7 +54,9 @@ class Main:
             X_train_encoded = encoding.fit_transform(X_train)
             X_test_encoded = encoding.transform(X_test)
 
+
             #Creating the grid search CV to find the best hyperparameters
+            
             parameter_grid = {
                 'n_estimators': [100, 200, 300],
                 'max_depth': [None, 10, 20, 30],
