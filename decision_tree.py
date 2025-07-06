@@ -13,7 +13,6 @@ def main():
     Independent_var = dataset.drop(['species'], axis=1)
     Dependent_var = dataset['species']
 
-
     Independent_var_names = Independent_var.columns.tolist()
 
     X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.2, random_state=42)

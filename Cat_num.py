@@ -4,6 +4,8 @@ from sklearn.metrics import r2_score, mean_absolute_error #To see the accuracy
 from sklearn.preprocessing import OneHotEncoder #To convert categorical data into numerical
 from sklearn.compose import ColumnTransformer #Upon convertion it is necessary to make it array
 from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_iris
+import seaborn as sns
 import numpy as np 
 import pandas as pd #To access the data frame
 from scipy import stats
@@ -44,8 +46,6 @@ class Main:
 
             #Split the dataframe into Train and Test
             X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.2, random_state=42)
-
-            print(X_train_scaled)
                         
             #Transformed the categorical Data into Numerical Data but in a Binary way since the data are nominal
             Categorical_var = dataframe.select_dtypes(include=['object']).columns.tolist()

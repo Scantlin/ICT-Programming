@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IRIS</title>
+</head>
+<body>
+    <h1 style="color: aqua; text-align: center;">Basic Prediction of IRIS Species</h1>
+    
+    <form method="POST">
+        <input type='number' step="0.01" id="Sepal_length" name="Sepal_length" placeholder="Enter Sepal Length" required>
+
+        <input type="number" step="0.01" id="Sepal_width" name="Sepal_width" placeholder="Enter Sepal Width" required>
+
+        <input type="number" step="0.01" id="Petal_length" name="Petal_length" placeholder="Enter Petal Length" required>
+
+        <input type="number" step="0.01" id="Petal_width" name="Petal_width" placeholder="Enter Petal Width" required>
+
+        <button type="submit">Submit</button>
+    </form>
+    
+    <h2 style="text-align: center;">Prediction:</h2>
+    <p>{{ output }}</p>
+    <h3 style="text-align: center;">Data: </h3>
+    <p>{{ data }}</p>
+    <p>{{ data2 }}</p>
+    <p>{{ data3 }}</p>
+    <p>{{ data4 }}</p>
+    <h4>Accuracy: </h4>
+    <p>{{ Accuracy }}</p>
+    
+</body>
+</html>

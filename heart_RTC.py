@@ -1,12 +1,14 @@
 #THIS IS A RANDOM TREE CLASSIFIER
 import numpy as np
 import pandas as pd
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.metrics import accuracy_score, mean_absolute_error, r2_score, confusion_matrix
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
 
 def main():
     try:
@@ -29,11 +31,17 @@ def main():
         X_train_encoded = Encoding.fit_transform(X_train) #Fit_transform
         X_test_encoded = Encoding.transform(X_test) #transform, to avoid overfitting
 
-        model = RandomForestClassifier(criterion='gini', random_state=42, max_depth=10, max_samples=100).fit(X_train_encoded, y_train)
-        #model = LogisticRegression(max_iter=100).fit(X_train_encoded, y_train)
+        
+        model = DecisionTreeClassifier(criterion='gini', random_state=42).fit(X_train_encoded, y_train)
+        #model = LogisticRegression(max_iter=1000).fit(X_train_encoded, y_train)
+        #model = KNeighborsClassifier().fit(X_train_encoded, y_train)
+        #model = RandomForestClassifier().fit(X_train_encoded, y_train)
         y_pred_test = model.predict(X_test_encoded)
 
         accuracy = accuracy_score(y_test, y_pred_test) * 100
+        print(accuracy)
+
+        print(confusion_matrix(y_test, y_pred_test))
         
     except Exception as e:
         print(e)

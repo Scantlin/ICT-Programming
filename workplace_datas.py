@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score, mean_absolute_error
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 import sqlite3
 from datetime import datetime
 import pytz
@@ -37,18 +39,27 @@ def main():
 
     set = sqlite3.connect('sample.db')
     df = connection(set)
-    print('Datas: ')
-    print(df)
 
-    #creating a XData and yData
+    #creating a Independent_var and Dependent_var
+    Independent_var = df[['temperature']] #independent Variable
+    Dependent_var = df.iloc[:, -1]
 
-    XData = df[['age']] #independent Variable
-    yData = df['Price']
+    variables = [Independent_var, Dependent_var]
 
-    variables = ['age', 'Price']
+    #Creating Train and Test set
+    X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.25, random_state=42)
     
-    model = LinearRegression().fit(XData, yData)
-    prediction = model.predict(XData)
+    model = LinearRegression().fit(X_train, y_train)
+    prediction = model.predict(X_test)
+
+    accuracy = {
+        "prediction": prediction,
+        "y_test": y_test, 
+        "error": abs(prediction - y_test),
+        "MAE": mean_absolute_error(y_test, prediction)
+    }
+
+    print(accuracy)
 
     plt.style.use('dark_background')
     fig = plt.figure()
@@ -56,12 +67,13 @@ def main():
     for i, data in enumerate(variables, start=1):
         if i == 1:
             plt.subplot(1, 2, i)
-            plt.title('Perfect Fit')
-            plt.xlabel('Age')
+            plt.title('Test prediction')
+            plt.xlabel('Temperature')
             plt.ylabel('Price')
             plt.grid(alpha=0.4)
-            plt.scatter(XData, yData, marker='x', color='blue', label='Actual Data')
-            plt.plot(XData, prediction, color='red', label='Prediction')
+            plt.scatter(X_test, y_test, marker='x', color='blue', label='Actual Data')
+            plt.plot(X_test, prediction, color='red', label='Prediction')
+
 
         elif i == 2:
             plt.subplot(1, 2, i)
@@ -69,8 +81,8 @@ def main():
             plt.xlabel('Price')
             plt.ylabel('Price')
             plt.grid(alpha=0.4)
-            plt.scatter(yData, prediction, marker='o', color='green', label='Accuracy')
-            plt.plot([yData.min(), yData.max()], [yData.min(), yData.max()], color='violet', label='Perfect Line')
+            plt.scatter(y_test, prediction, marker='o', color='green', label='Accuracy')
+            plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='violet', label='Perfect Line')
         plt.legend()
     
     fig.text(0.99, 0.01, time, color='gray', fontsize=8, ha='right', va='bottom')
@@ -79,6 +91,7 @@ def main():
     plt.show()
     print('The Program is executed Successfully')
     print(f'Predictions are {prediction}')
+    print(df)
 
 if __name__ == '__main__':
     main()
