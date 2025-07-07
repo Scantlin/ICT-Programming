@@ -44,7 +44,8 @@ def main():
     cluster1 = data[data.clusters==0] #retrieve only the clusters that is 0
     cluster2 = data[data.clusters==1] #retrive only the clusters that is 1
     cluster3 = data[data.clusters==2] #retrive only the clusters that is 2
-
+    
+    plt.style.use('dark_background')
     plt.title('Unsupervised Learning: Clustering')
     plt.scatter(cluster1['petal_length'], cluster1['petal_width'], color='green', label='Cluster 1')
     plt.scatter(cluster2['petal_length'], cluster2['petal_width'], color='blue', label='cluster 2')
