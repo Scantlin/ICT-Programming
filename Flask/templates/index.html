@@ -3,7 +3,8 @@
 <head>
     <title>IRIS</title>
 </head>
-<body>
+<body style="background-color: black;">
+    <div id="structure" style="text-align: center;">
     <h1 style="color: aqua; text-align: center;">Basic Prediction of IRIS Species</h1>
     
     <form method="POST">
@@ -18,15 +19,16 @@
         <button type="submit">Submit</button>
     </form>
     
-    <h2 style="text-align: center;">Prediction:</h2>
-    <p>{{ output }}</p>
-    <h3 style="text-align: center;">Data: </h3>
-    <p>{{ data }}</p>
-    <p>{{ data2 }}</p>
-    <p>{{ data3 }}</p>
-    <p>{{ data4 }}</p>
-    <h4>Accuracy: </h4>
-    <p>{{ Accuracy }}</p>
+    <h2 style="text-align: center; color: red;">Prediction:</h2>
+    <p style="color: aquamarine;">{{ output }}</p>
+    <h3 style="text-align: center; color: red;">Data: </h3>
+    <p style="color: burlywood;">{{ data }}</p>
+    <p style="color: burlywood;">{{ data2 }}</p>
+    <p style="color: burlywood;">{{ data3 }}</p>
+    <p style="color: burlywood;">{{ data4 }}</p>
+    <h4 style="color: red;">Accuracy: </h4>
+    <p style="color: azure;">{{ Accuracy }}</p>
+    </div>
     
 </body>
 </html>
