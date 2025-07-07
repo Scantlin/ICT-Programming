@@ -15,7 +15,6 @@ def main():
 
     #Split the data into Train and Test
     X_train, X_test, y_train, y_test = train_test_split(independent_var, dependent_var, test_size=0.2)
-
     
     #use tensorflow
     model = tf.keras.models.Sequential()
