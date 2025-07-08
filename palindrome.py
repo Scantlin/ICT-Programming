@@ -19,7 +19,6 @@ def other_method(word=str):
     palindrome = word[::-1] #start:stop:step same as for loops
     print(palindrome)
 
-
 if __name__ == '__main__':
     #main()
     other_method(input('Enter the word: '))
