@@ -1,8 +1,10 @@
-import numpy as np 
+import warnings
+import easyocr
 
-def main():
-    x = np.linspace(1, 22, 100)
-    print(x)
+warnings.filterwarnings('ignore')
 
-if __name__ == '__main__':
-    main()
+reader = easyocr.Reader(['en'])
+image = reader.readtext('Unsupervised_learning_clustering.png')
+
+for detection in image:
+    print(detection[1])
