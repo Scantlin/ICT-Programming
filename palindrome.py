@@ -4,7 +4,7 @@ def main():
     print(add(5))'''
     
     word = input('Enter a word to check if it is a palindrome: ')
-    palindrome = []
+    palindrome = [] #or just use the built in method of python list() to convert the string into list
     for i in range(1, len(word)+ 1):
         letter = word[-i]
         palindrome.append(letter)
