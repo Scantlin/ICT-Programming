@@ -61,7 +61,8 @@ def main2():
     model = np.poly1d(mymodel)
 
     myline = np.linspace(1, 22, 100)
-    print(model(1)) #predict a data in x or my choice
+    print(model(myline)) #predict a data in x or my choice
+    print(myline)
 
     plt.scatter(x, y)
     plt.plot(myline, model(myline))
@@ -70,6 +71,6 @@ def main2():
 
 
 if __name__ == '__main__':
-    main()
-    #main2()
+    #main()
+    main2()
 
