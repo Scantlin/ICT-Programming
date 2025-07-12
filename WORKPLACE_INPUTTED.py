@@ -1,4 +1,49 @@
 print('---------------------------------------------------------------------------------------------------------------')
+#THIS WORKPLACE IS FOR IMPROVING THE CODES FOR PYTHON
+print('---------------------------------------------------------------------------------------------------------------')
+
+print('---------------------------------------------------------------------------------------------------------------')
+#DICTIONARY 
+#-----------------------------------------------------------------------------------
+def generate_dict(lyrics):
+    mydict = {}
+    for word in lyrics:
+        if word in mydict:
+            mydict[word] += 1
+        else:
+            mydict[word] = 1
+
+    return mydict
+
+sample_lyrics = ['you', 'love', 'me', 'mahal', 'kita', 'me', 'kita', 'love', 'love']
+freq = max(generate_dict(sample_lyrics).values())
+
+for key, value in generate_dict(sample_lyrics).items():
+    if value == freq:
+        print(f'{key} has the most frequency with {freq}')
+
+#-----------------------------------------------------------------------------------
+import pandas as pd
+
+student = {
+    'name': ['Scantlin', 'Emman', 'Dave', 'Vince'],
+    'Grade': ['2nd year', '2nd year', '2nd year', '2nd year'],
+    'sex': ['male', 'male', 'male', 'male'],
+    'single': ['yes', 'no', 'no', 'yes']
+
+}
+
+print(student['name']) #access the value from the key in name
+print('john' in student) #to check if it exist on the dictionary
+print(student.values()) #return all the values in the student dictionary
+print(student.keys()) #return all the keys in the student dictionary
+
+df = pd.DataFrame(student) #convert the dictionary into dataframe
+print(df)
+del(student['single']) #to delete the key and value on the dictionary
+print(student)
+
+print('---------------------------------------------------------------------------------------------------------------')
 #FIBONACCI SEQUENCE   
 def main2():
     length = int(input('Enter the length of the fibonacci sequence: '))
@@ -19,8 +64,18 @@ def main2():
         fibo.pop()
         print('only 1')
 
+def main3(x):
+    if x == 0 or x == 1:
+        return 1
+
+    else:
+        return main3(x - 1) + main3(x - 2)
+
+
 if __name__ == '__main__':
+    print(main3(2))
     main2()
+
 print('---------------------------------------------------------------------------------------------------------------')
 #CHANGING 6 INTO 9
 def main():

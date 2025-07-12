@@ -25,6 +25,7 @@ def main():
         K.fit(data) #fit the data
         sse.append(K.inertia_)
 
+    print(sse)
     #visualize the sse for us to known the K_numbers
     '''
     plt.plot(K_range, sse, 'o-')

@@ -1,43 +1,54 @@
+#THIS WORKPLACE IS FOR PLOTTING PRACTICE
 import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error, r2_score
-import pandas as pd
-from datetime import datetime
-import pytz
+import matplotlib.pyplot as plt
 
 def main():
-    time_zone = pytz.timezone('Asia/Manila')
-    Time = datetime.now(time_zone).strftime('%d-%m-%y %H:%M')
-    data = pd.read_csv('Salary_dataset.csv')
-    X = data[['YearsExperience']]
-    y = data['Salary']
-
-    #Split Dataset into Train and Test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
     
-    #Create a model
-    model = LinearRegression().fit(X_train, y_train)
+    independent_var = np.linspace(-3, 3, 100)
+    Dependendent_var = (independent_var**3) - (6 * independent_var)
 
-    y_pred_train = model.predict(X_train) #Prediction for Y train, or the dataset that we have
-    y_pred_test = model.predict(X_test)
+    #scattering the actual points that we have
+    x = np.linspace(-3, 3, 7) #or np.array([-3, -2, -1, 0, 1, 2, 3])
+    fx = x**3 - 6*x
 
-    error = {
-        'Y test': y_test,
-        'Y Prediction Test': y_pred_test,
-        'Error': y_test-y_pred_test
-    }
-    print(error)
+    plt.title('plotting of f(x) = x^3 - 6x')
+    plt.plot(independent_var, Dependendent_var, color='red')
+    plt.scatter(x, fx, color='blue', label='actual points')
+    #plt.xticks(np.arange(0, 11, 1))
+    #plt.yticks() <-- this is to adjust the labeling counting of any axis
 
-    Train_MAE = mean_absolute_error(y_train, y_pred_train)
-    r2_train = r2_score(y_train, y_pred_train)
+    plt.xlim(min(independent_var)-1, max(independent_var) + 1)
+    plt.ylim(min(Dependendent_var)-1, max(Dependendent_var)+1)
 
-    Test_MAE = mean_absolute_error(y_test, y_pred_test)
-    r2_test = r2_score(y_test, y_pred_test)
+    plt.xlabel('independent variable')
+    plt.ylabel('Dependent Variable')
+    plt.grid()
+    plt.savefig('workplace2.png')
+    plt.show()
+    print(independent_var)
+    print(Dependendent_var)
 
-    print(f'TRAIN MAE: {Train_MAE:.2f} R2_TRAIN: {r2_train:.2f}')
-    print(f'TEST MAE : {Test_MAE:.2f} R2_TEST: {r2_test:.2f}')
-    print(Time)
-    
+    #other methods
+    '''
+    axvline	Vertical line	plt.axvline(x=2)
+    axhline	Horizontal line	plt.axhline(y=3)
+    axline	Arbitrary line	plt.axline((0,0), slope=1)
+
+    #sample code
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    x = np.linspace(-5, 5, 100)
+    y = x**2
+
+    plt.plot(x, y, label='y = x²')
+    plt.axvline(x=0, color='black', linestyle='-', label='x=0')  # Vertical axis
+    plt.axhline(y=0, color='black', linestyle='-', label='y=0')  # Horizontal axis
+    plt.axline((1,1), slope=2, color='red', linestyle='--', label='Tangent at x=1')  # Tangent line
+    plt.legend()
+    plt.grid(True)
+    plt.savefig('workplace2.png')
+    plt.show()'''
+
 if __name__ == '__main__':
     main()
