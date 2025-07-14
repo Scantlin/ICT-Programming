@@ -1,9 +1,36 @@
 #THIS WORKPLACE IS FOR PLOTTING PRACTICE
 import numpy as np
 import matplotlib.pyplot as plt
+from sympy import sympify, symbols, lambdify
 
 def main():
+    #this input will be the input for the user's customizable function
+    print('--------------------------------------------------------------------------')
+    print('This is function visualization')
+
+    function = input('Enter the function: ')
+    Indep = np.linspace(1, 10, 10)
+    #x = symbols('x')
+
+    poly_func = function.replace('^', '**').replace('x', '*x').replace('+ *x', '+ x').replace('- *x', '- x')
+
+    if poly_func.startswith('*x'):
+        poly_func = poly_func[1:]
+
+    def f(x):
+        return eval(poly_func)
+    print(f(Indep))
+
+    '''
+    second = sympify(poly_func)
+    fx = lambda x_value: second.subs(x, x_value)
+    print(fx(5))
+
+    fxx = lambdify(x, second)
+    print(fxx(5))'''
+
     
+    '''
     independent_var = np.linspace(-3, 3, 100)
     Dependendent_var = (independent_var**3) - (6 * independent_var)
 
@@ -26,7 +53,7 @@ def main():
     plt.savefig('workplace2.png')
     plt.show()
     print(independent_var)
-    print(Dependendent_var)
+    print(Dependendent_var)'''
 
     #other methods
     '''
