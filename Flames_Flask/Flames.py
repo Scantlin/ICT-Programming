@@ -21,8 +21,6 @@ def home():
         flames = flames * score
         result = flames[score-1]
 
-        print(f'result: {result}')
-
         match(result):
             case 'F':
                 result = 'FRIEND'
@@ -48,11 +46,11 @@ def database(names:str, crushes:str, results:str):
     #edit = set_connect.cursor()
     #edit.execute('CREATE TABLE users(Name TEXT, Crush TEXT, result TEXT)') #Creating a table
 
-    #query = 'INSERT INTO users (Name, Crush, result) VALUES(?,?,?)'
-    query = 'DELETE FROM users WHERE Name=?'
+    query = 'INSERT INTO users (Name, Crush, result) VALUES(?,?,?)'
+    #query = 'DELETE FROM users WHERE Crush=?'
 
     with set_connect:
-        set_connect.execute(query, ['John Scantlin B Cayson'])
+        set_connect.execute(query, (names, crushes, results))
 
     read = pd.read_sql('SELECT * FROM users', set_connect)
     read.to_csv('Flames.csv', index=False)
@@ -63,8 +61,6 @@ def function(Name:str, Crush:str, Ov_len:int):
             Name = Name.replace(i, '')
             Crush = Crush.replace(i, '')
 
-    print(Name)
-    print(Crush)
     return Ov_len - len(Name + Crush)
     
 if __name__ == '__main__':

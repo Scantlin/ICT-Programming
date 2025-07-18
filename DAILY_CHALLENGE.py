@@ -67,7 +67,7 @@ def C5(func: str, unit: int):
     ev = lambda uni: derive.subs(x, uni)
     print(ev(unit))'''
 
-def main(name1:str, name2:str, ov_len:int):
+def C6(name1:str, name2:str, ov_len:int):
     your_name1 = name1.lower()
     crush_name = name2.lower()
     
@@ -119,9 +119,9 @@ if __name__ == '__main__':
 
     print(f'Marginal cost is {C5(fun, Unit)}')'''
 
-    #Workplace
+    #return the number of similar letter in two words
     name = input('Your name: ').replace('.', '')
     crush = input('Crush name: ').replace('.', '')
     combine_len = len(name + crush)
 
-    main(name, crush, combine_len)
+    C6(name, crush, combine_len)
