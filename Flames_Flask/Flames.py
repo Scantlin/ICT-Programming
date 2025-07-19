@@ -10,8 +10,8 @@ def home():
     score = 0
     result = ''
     if request.method == 'POST':
-        name = request.form.get('Your_name').replace('.', '').lower()
-        crush = request.form.get('Crush').replace('.', '').lower()
+        name = request.form.get('Your_name').replace('.', '').lower().strip()
+        crush = request.form.get('Crush').replace('.', '').lower().strip()
 
         sum_len = len(name + crush)
 

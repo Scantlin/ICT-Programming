@@ -1,6 +1,8 @@
 #this is compilation of the daily activities
 from math import pi
 from sympy import diff, symbols
+import pandas as pd
+import sqlite3
 
 #Challenge 1
 def C1(degree) -> float:
@@ -67,6 +69,7 @@ def C5(func: str, unit: int):
     ev = lambda uni: derive.subs(x, uni)
     print(ev(unit))'''
 
+#Challenge 6
 def C6(name1:str, name2:str, ov_len:int):
     your_name1 = name1.lower()
     crush_name = name2.lower()
@@ -77,6 +80,14 @@ def C6(name1:str, name2:str, ov_len:int):
             crush_name = crush_name.replace(i, '')
 
     print(f'number of similar letter: {ov_len - len(your_name1 + crush_name)}')
+
+#Challenge 7
+def C7():
+    set = sqlite3.connect('Flames.db')
+    data = pd.read_sql('SELECT * FROM users', set)
+
+    print(data)
+
 
 if __name__ == '__main__':
     #C1 Convert degree to radians
@@ -120,8 +131,11 @@ if __name__ == '__main__':
     print(f'Marginal cost is {C5(fun, Unit)}')'''
 
     #return the number of similar letter in two words
+    '''
     name = input('Your name: ').replace('.', '')
     crush = input('Crush name: ').replace('.', '')
     combine_len = len(name + crush)
 
-    C6(name, crush, combine_len)
+    C6(name, crush, combine_len)'''
+
+    C7()
