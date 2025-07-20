@@ -1,33 +1,46 @@
-from sklearn.model_selection import train_test_split
-from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split #to split the dataset into train and test
+from sklearn.tree import DecisionTreeRegressor #tree model
+from sklearn.metrics import mean_absolute_error, mean_squared_error #to study the accuracy
+from sklearn.preprocessing import OneHotEncoder #to convert categorical data into numerical
+from sklearn.compose import ColumnTransformer #to transform it into columns
+from sklearn.linear_model import LinearRegression #simple linear regression model
+from sklearn.ensemble import RandomForestRegressor #random forest model
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
+import seaborn as sns #to load datesets
 
 def main():
-    dataset = sns.load_dataset('iris')
+    data = sns.load_dataset('tips') #load dateset
 
-    Independent_var = dataset.drop(['species'], axis=1)
-    Dependent_var = dataset['species']
+    categorical_var =  data.select_dtypes(include=['object', 'category']).columns.tolist()
 
-    Independent_var_names = Independent_var.columns.tolist()
+    #get dummies using pandas
+    #get_dummies = pd.get_dummies(data, columns=categorical_var)
+    #print(get_dummies)
 
-    X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.2, random_state=42)
+    #Independent Variable and Dependent Variable
+    Independent_var = data.drop(['tip'], axis=1)
+    Depedendent_var = data['tip']
 
-    model = RandomForestClassifier(n_estimators=100,criterion='gini').fit(X_train, y_train)
-    y_pred2 = model.predict(X_test)
+    #Split the dataset into train and test
+    X_train, X_test, y_train, y_test = train_test_split(Independent_var, Depedendent_var, test_size=0.2, random_state=42)
 
-    print(accuracy_score(y_test, y_pred2))
-    
-    '''
-    fig = plt.figure(figsize=(10, 8))
-    tree.plot_tree(model, feature_names= Independent_var_names,filled=True)
-    plt.savefig('decision_tree.png')
-    plt.show()'''
+    #Transform the categorical data
+    processing = ColumnTransformer(transformers=[('category', OneHotEncoder(), categorical_var)], remainder='passthrough', verbose_feature_names_out=False)
 
+    X_train_encoded = processing.fit_transform(X_train)
+    X_test_encoded = processing.transform(X_test)
+
+    #model
+    model1 = RandomForestRegressor(random_state=42).fit(X_train_encoded, y_train)
+    model = LinearRegression().fit(X_train_encoded, y_train) #got the highest
+    model2 = DecisionTreeRegressor(random_state=42).fit(X_train_encoded, y_train)
+
+    #predict
+    predict = model.predict(X_test_encoded)
+    print(predict)
+    print(y_test.tolist())
+    print(round(mean_absolute_error(y_test, predict), 2) * 100)
 
 if __name__ == '__main__':
     main()

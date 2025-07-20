@@ -88,6 +88,16 @@ def C7():
 
     print(data)
 
+#Challenge 8
+def C8(num_list:list, Choice:int):
+
+    match Choice:
+        case 1:
+            return "squared:", list(map(lambda x: x**2, num_list))
+        case 2:
+            return "summation:", sum(num_list)
+        case 3:
+            return "Mean:", sum(num_list)/len(num_list)
 
 if __name__ == '__main__':
     #C1 Convert degree to radians
@@ -138,4 +148,26 @@ if __name__ == '__main__':
 
     C6(name, crush, combine_len)'''
 
-    C7()
+    #print the dataframe
+    #C7()
+
+    #return the squared value on a list, when the user input the numbers
+    '''
+    nums = []
+
+    print('Operations: \n1. Squared\n2. Sum\n3. Mean')
+    choice_user = int(input('Enter your choice: '))
+
+    if choice_user > 3 or choice_user <= 0:
+        print('Invalid Input')
+    else:
+        length = int(input('Enter how many digits you will enter: '))
+        print('Enter your numbers: ')
+
+        for i in range(length):
+            num = int(input())
+            nums.append(num)
+
+        result = C8(nums, choice_user)
+        print(f'result for {result[0]} {result[1]}')'''
+    
