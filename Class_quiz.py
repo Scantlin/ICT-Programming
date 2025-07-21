@@ -20,7 +20,7 @@ class Main:
             'Who is the father of Accounting?': ['luca pacioli', 'pacioli'],
             'What is the derivatives of sin?': ['cos'],
             'What is the largest river in the world?': ['nile', 'nile river'],
-            'What is the game': ['none']
+            'What is the game': ['child has responsibility']
         }
     
         self.score = 0 #initialize the score into zero
