@@ -19,7 +19,8 @@ class Main:
             'what is the highest mountain on the world?': ['mt. everest', 'everest'],
             'Who is the father of Accounting?': ['luca pacioli', 'pacioli'],
             'What is the derivatives of sin?': ['cos'],
-            'What is the largest river in the world?': ['nile', 'nile river']
+            'What is the largest river in the world?': ['nile', 'nile river'],
+            'What is the game': ['none']
         }
     
         self.score = 0 #initialize the score into zero
