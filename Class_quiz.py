@@ -134,4 +134,6 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print('Thank you for playing')
+        print('Thank you')
         raise SystemExit
+    
