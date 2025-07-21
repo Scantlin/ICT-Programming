@@ -99,6 +99,16 @@ def C8(num_list:list, Choice:int):
         case 3:
             return "Mean:", sum(num_list)/len(num_list)
 
+def C9(choice:int):
+    command = {
+        1: 'Scant',
+        2: 'You',
+        3: 'Sean'
+    }
+
+    print(command.get(choice, 'invalid')())
+
+
 if __name__ == '__main__':
     #C1 Convert degree to radians
     '''deg = int(input('Enter the degree: '))
@@ -170,4 +180,6 @@ if __name__ == '__main__':
 
         result = C8(nums, choice_user)
         print(f'result for {result[0]} {result[1]}')'''
+
+    C9(2)
     
