@@ -30,7 +30,7 @@ class Main:
     def show_menu(self):
         choice = int(input("Enter Choice: "))
 
-        #METHOD 1
+        #METHOD 1 for dictionary
         command = {
             1: (self.display_question, True),
             2: (self.show_score, True),
@@ -41,7 +41,8 @@ class Main:
         if action:
             action()
         return should_continue
-        #METHOD 2
+
+        #METHOD 2 for if-else statement
         '''
         if choice == 1:
             self.display_question()
