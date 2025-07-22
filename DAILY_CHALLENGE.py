@@ -3,6 +3,7 @@ from math import pi
 from sympy import diff, symbols
 import pandas as pd
 import sqlite3
+import random
 
 #Challenge 1
 def C1(degree) -> float:
@@ -108,6 +109,40 @@ def C9(choice:int):
 
     print(command.get(choice, 'invalid')())
 
+def C10():
+    data = pd.read_csv('general_knowledge.csv')
+    
+    data_dict = dict(zip(data['question'], data['answer']))
+
+    data_dict_list = {key: value.lower().split() for key, value in data_dict.items()}
+
+    #print(data_dict_list)
+    
+    #print(data_dict_list)
+    list_question = list(data_dict.keys())
+    random.shuffle(list_question)
+
+    x = 1
+    score = 0
+  
+    for i in list_question:
+        print(f'{x}, {i}')
+        answer = input('Answer: ').strip().lower()
+
+        if answer in data_dict_list[i]:
+            print('Correct')
+            score += 1
+        
+        else:
+            print('wrong')
+            print('correct answer: ', data_dict[i])
+
+        x += 1
+
+        if x == 4:
+            print(f'Your score is {score}/{x-1}')
+            print('Thank you for playing')
+            break
 
 if __name__ == '__main__':
     #C1 Convert degree to radians
@@ -181,5 +216,7 @@ if __name__ == '__main__':
         result = C8(nums, choice_user)
         print(f'result for {result[0]} {result[1]}')'''
 
-    C9(2)
+    #C9(2)
+
+    C10()
     
