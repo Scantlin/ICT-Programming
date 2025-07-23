@@ -114,11 +114,8 @@ def C10():
     
     data_dict = dict(zip(data['question'], data['answer']))
 
-    data_dict_list = {key: value.lower().split() for key, value in data_dict.items()}
+    data_dict_list = {key: value.lower().replace('of', "").split() for key, value in data_dict.items()}
 
-    #print(data_dict_list)
-    
-    #print(data_dict_list)
     list_question = list(data_dict.keys())
     random.shuffle(list_question)
 
@@ -139,7 +136,7 @@ def C10():
 
         x += 1
 
-        if x == 4:
+        if x == 6:
             print(f'Your score is {score}/{x-1}')
             print('Thank you for playing')
             break
