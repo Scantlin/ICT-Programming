@@ -4,6 +4,7 @@ from sympy import diff, symbols
 import pandas as pd
 import sqlite3
 import random
+import sympy as sp
 
 #Challenge 1
 def C1(degree) -> float:
@@ -100,15 +101,28 @@ def C8(num_list:list, Choice:int):
         case 3:
             return "Mean:", sum(num_list)/len(num_list)
 
+#Challenge 9
 def C9(choice:int):
+    con = [5]
     command = {
-        1: 'Scant',
-        2: 'You',
-        3: 'Sean'
+        1: ('Scant', 'Nathan'),
+        2: ('You', 'me'),
+        3: ('Done', 'Hope'),
+        4: (None, 'Done')
     }
 
-    print(command.get(choice, 'invalid')())
+    name, partner = command.get(choice, ('invalid', 'not sure'))
+    #print(f'name: {name}')
+    #print(f'partner: {partner}')
 
+    if con: #If it contains something particulary uses in list, array or tuple
+        print(name)
+        print(partner)
+    else:
+        print(partner)
+
+
+#Challenge 10
 def C10():
     data = pd.read_csv('general_knowledge.csv')
     
@@ -140,6 +154,15 @@ def C10():
             print(f'Your score is {score}/{x-1}')
             print('Thank you for playing')
             break
+
+#Challenge 11
+def C11(equa:str, answer):
+    x = symbols('x')
+    parse = sp.parse_expr(equa, transformations='all')
+    Equation = sp.Eq(parse, answer)
+
+    ans = sp.solve(Equation, x)
+    print('Answer:', ' and '.join(map(str, ans)))
 
 if __name__ == '__main__':
     #C1 Convert degree to radians
@@ -213,7 +236,15 @@ if __name__ == '__main__':
         result = C8(nums, choice_user)
         print(f'result for {result[0]} {result[1]}')'''
 
-    #C9(2)
+    #Get function in dictionary
+    choice = int(input('Enter a number from 1 - 3: '))
+    C9(choice)
 
-    C10()
+    #C10()
+
+    #Finding X from an equation
+    '''
+    user_input_ex = input('Enter your expression: ')
+    answer_user = int(input('Enter the answer: '))
     
+    C11(user_input_ex, answer_user)'''
