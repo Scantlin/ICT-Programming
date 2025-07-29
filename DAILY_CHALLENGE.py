@@ -248,3 +248,7 @@ if __name__ == '__main__':
     answer_user = int(input('Enter the answer: '))
     
     C11(user_input_ex, answer_user)'''
+
+    import math
+
+    print(math.ceil(4/2))

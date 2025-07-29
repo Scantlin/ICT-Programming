@@ -1,55 +1,5 @@
 import sympy as sp
 
-class Main:
-    def __init__(self):
-        self.answer = []
-        self.equations = []
-
-    def equation(self):
-        print('Options\n1. Find x\n2. Exit')
-        choices = int(input('Enter your choice: '))
-
-        options = {
-            1: (self.express, True),
-            2: (None, False)
-        }
-
-        actions, should_continue = options.get(choices, (self.invalid, True))
-
-        if actions:
-            actions()
-        else:
-            if should_continue == False:
-                print('Thank you for using the app')
-            return should_continue
-        
-
-    def express(self):
-        equation = input('Enter your equation: ')
-        x = sp.symbols('x') #to define x in the expression
-        Equation_parse = sp.parse_expr(equation, transformations='all')
-        answer = sp.solve(Equation_parse, x)
-        print('the answer is',  ' and '.join(map(str, answer)))
-
-        #Storingd data
-        self.answer.append(answer)
-        self.equations.append(equation)
-
-    def invalid(self):
-        print('You input invalid option')
-
-if __name__ == '__main__':
-    app = Main() 
-
-    running = True
-    while running:
-        running = app.equation()
-
-    for i, value in enumerate(app.equations):
-        print(f'Equation: {value} \nAnswer: {app.answer[i]}')
-
-
-
 '''
 def C11(equa: str, answer:int):
     x = sp.symbols('x')
