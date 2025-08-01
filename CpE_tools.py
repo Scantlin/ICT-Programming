@@ -124,46 +124,40 @@ class Main:
 
     def current_solver(self):
         print('---------------------------- CURRENT SOLVER ----------------------------')
-        print('type \'x\' if that is the missing')
-
+    
         Holder = []
         Charge = '0'
         Time = '0'
         Current = '0'
 
-        Problem = input('Enter your problem: ').replace('.', '').replace(',', '').split(" ") #Give us a list content
+        print('Choose Type \n1. Given the Value \n2. Problem Type')
 
-        for i in range(len(Problem)):
-            if (any(c.isalpha() for c in Problem[i]) and any(c.isdigit() for c in Problem[i])):
-                if Problem[i].upper().endswith('C'):
-                    Charge = Problem[i][:-1]
-                elif Problem[i].upper().endswith('S'):
-                    Time = Problem[i][:-1]
-                elif Problem[i].upper().endswith('A'):
-                    Current = Problem[i][:-1]
-        
-        #sorted_items = sorted(Holder, key=lambda x: (not 'c' in x.lower(), x))
-        
-        '''
-        for i in Holder:
-            if i.upper().endswith('C'):
-                new_holder.append(i[:-1])
+        while True:
+            choice = int(input('Enter your choice: '))
+            if choice == 2:
+                Problem = input('Enter your problem: ').replace(',', '').split(" ") #Give us a list content
 
-            elif i.upper().endswith('S'):
-                new_holder.append(i[:-1])
-            
-            elif i.upper().endswith('A'):
-                new_holder.append(i[:-1])
+                for i in range(len(Problem)):
+                    if (any(c.isalpha() for c in Problem[i]) and any(c.isdigit() for c in Problem[i])):
+                        if Problem[i].upper().endswith('C'):
+                            Charge = Problem[i][:-1]
+                        elif Problem[i].upper().endswith('M'): #for minutes
+                            Time = eval(Problem[i][:-1] + '* 60')
+                        elif Problem[i].upper().endswith('S'):
+                            Time = Problem[i][:-1]
+                        elif Problem[i].upper().endswith('A'):
+                            Current = Problem[i][:-1]
+                break
+
+            elif choice == 1:
+                print('type \'x\' if that is the missing')
+                Charge = input('Enter the charge (coulombs): ').replace('x', '0')
+                Time = input('Enter the time (second): ').replace('x', '0')
+                Current = input('Enter the current (Ampere): ').replace('x', '0')
+                break
 
             else:
-                new_holder.append('0')
-
-        print(new_holder)'''
-        
-        
-        #Charge = input('Enter the charge (coulombs): ').replace('x', '0')
-        #Time = input('Enter the time (second): ').replace('x', '0')
-        #Current = input('Enter the current (Ampere): ').replace('x', '0')
+                print('Invalid Input')
 
         for i in range(1):
             Holder.append(Charge)
@@ -180,17 +174,16 @@ class Main:
         match formula:
             case 1: #Charge
                 Holder[0] = Holder[1] * Holder[2]
-                print(f'Charge: {Holder[0]} C')
+                print(f'Charge: {round(Holder[0])} C')
             case 2: #Time
                 Holder[1] = Holder[0]/Holder[2]
-                print(f'Time: {Holder[1]} s')
+                print(f'Time: {round(Holder[1])} s')
             case 3: #Current
                 Holder[2] = Holder[0]/Holder[1]
-                print(f'Current: {Holder[2]} A')
+                print(f'Current: {round(Holder[2])} A')
 
         print('---------------------------- THANK YOU ----------------------------')
         
-
 
     def invalid(self):
         print('You input invalid option')

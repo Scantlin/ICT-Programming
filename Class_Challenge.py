@@ -1,4 +1,67 @@
 import sympy as sp
+import pubchempy as pcp
+import requests
+
+print('-------------------Arithmetic Sequence----------------------------')
+choice = int(input('1. Arithmetic Sequence \n2. Geometric Sequence \nChoice: '))
+missing = int(input('Enter number of missing: '))
+Ar_sequence_string = input('Enter sequence: ').replace(',', ' ').split(' ') #string first to apply the aplit function
+Ar_sequence_string = list(map(int, Ar_sequence_string))
+
+if choice == 1:
+    cd = Ar_sequence_string[1] - Ar_sequence_string[0]
+    for i in range(missing):
+        val = Ar_sequence_string[-1] + cd
+        Ar_sequence_string.append(val)
+
+    Ar_sequence_string = list(map(str, Ar_sequence_string))
+    print('Arithmetic Sequence:', ', '.join(Ar_sequence_string))
+
+elif choice == 2:
+    CR = Ar_sequence_string[1]/Ar_sequence_string[0]
+    for i in range(missing):
+        val = Ar_sequence_string[-1] * CR
+        Ar_sequence_string.append(val)
+
+    Ar_sequence_string = list(map(str, Ar_sequence_string))
+    print('Geometric Sequence:', ', '.join(Ar_sequence_string))
+
+else:
+    print('invalid input')
+
+    
+
+#sample API
+'''
+api_url = "http://api.weatherapi.com/v1/current.json?key=9daec57f4f154f2bb71133330250108&q=Philippines&aqi=yes"
+
+response = requests.get(api_url)
+
+if response.status_code == 200:
+    data = response.json()
+    print('data successfully retrieve')
+    print(data)
+    print(data['location'])
+    print(data['current']['wind_degree'])
+    print(data['current'].keys())
+
+else:
+    print(f'Error: {response.status_code} - {response.text}')
+'''
+'''
+chemical_name = input("Enter your chemical name: ")
+compound = pcp.get_compounds(chemical_name, 'name')[0]
+
+print(f'IUPAC name: {compound.iupac_name}')
+print(f'exact mass: {compound.exact_mass}')
+print(f'molecular formula: {compound.molecular_formula}')
+print(f'{compound}')
+'''
+'''
+x = sp.Symbol('x')
+func = input('Enter function: ')
+print(sp.Derivative(func, x, evaluate=True))
+'''
 
 '''
 def C11(equa: str, answer:int):

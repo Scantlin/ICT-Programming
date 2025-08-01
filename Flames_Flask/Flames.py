@@ -46,11 +46,11 @@ def database(names:str, crushes:str, results:str):
     edit = set_connect.cursor()
     #edit.execute('CREATE TABLE users(Name TEXT, Crush TEXT, result TEXT)') #Creating a table
 
-    query = 'INSERT INTO users (Name, Crush, result) VALUES(?,?,?)'
-    #query = 'DELETE FROM users'
+    #query = 'INSERT INTO users (Name, Crush, result) VALUES(?,?,?)'
+    query = 'DELETE FROM users'
 
     with set_connect:
-        set_connect.execute(query, (names, crushes, results))
+        set_connect.execute(query)
 
     read = pd.read_sql('SELECT * FROM users', set_connect)
     read.to_csv('Flames.csv', index=False)
