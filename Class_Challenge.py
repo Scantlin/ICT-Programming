@@ -1,6 +1,7 @@
 import sympy as sp
 import pubchempy as pcp
-import requests
+import request
+import math as mt
 
 print('-------------------Arithmetic Sequence----------------------------')
 choice = int(input('1. Arithmetic Sequence \n2. Geometric Sequence \nChoice: '))
@@ -19,13 +20,13 @@ if choice == 1:
 
 elif choice == 2:
     CR = Ar_sequence_string[1]/Ar_sequence_string[0]
-    for i in range(missing):
+    for i in range(missing): 
         val = Ar_sequence_string[-1] * CR
         Ar_sequence_string.append(val)
 
     Ar_sequence_string = list(map(str, Ar_sequence_string))
     print('Geometric Sequence:', ', '.join(Ar_sequence_string))
-
+    
 else:
     print('invalid input')
 

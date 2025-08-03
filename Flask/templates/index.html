@@ -1,34 +1,169 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IRIS</title>
+    <title>IRIS Species Predictor</title>
+    <style>
+        body {
+            background-color: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+        }
+        
+        h1 {
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            background-color: #2d2d2d;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #00ffaa;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #00aaff, #00ffaa);
+            color: black;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 170, 0.4);
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #252525;
+            border-radius: 10px;
+            border-left: 5px solid #00ffaa;
+        }
+        
+        h2, h3, h4 {
+            color: #ff5555;
+            margin-top: 25px;
+        }
+        
+        .prediction {
+            font-size: 24px;
+            color: #7fffd4;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(0, 255, 170, 0.1);
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .data-item {
+            background-color: #2a2a2a;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 3px solid #ffaa00;
+        }
+        
+        .accuracy {
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 10px;
+            background: linear-gradient(90deg, rgba(255,85,85,0.2), transparent);
+        }
+        
+        .iris-icon {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #00ffaa;
+        }
+    </style>
 </head>
-<body style="background-color: black;">
-    <div id="structure" style="text-align: center;">
-    <h1 style="color: aqua; text-align: center;">Basic Prediction of IRIS Species</h1>
-    
-    <form method="POST">
-        <input type='number' step="0.01" id="Sepal_length" name="Sepal_length" placeholder="Enter Sepal Length" required>
-
-        <input type="number" step="0.01" id="Sepal_width" name="Sepal_width" placeholder="Enter Sepal Width" required>
-
-        <input type="number" step="0.01" id="Petal_length" name="Petal_length" placeholder="Enter Petal Length" required>
-
-        <input type="number" step="0.01" id="Petal_width" name="Petal_width" placeholder="Enter Petal Width" required>
-
-        <button type="submit">Submit</button>
-    </form>
-    
-    <h2 style="text-align: center; color: red;">Prediction:</h2>
-    <p style="color: aquamarine;">{{ output }}</p>
-    <h3 style="text-align: center; color: red;">Data: </h3>
-    <p style="color: burlywood;">{{ data }}</p>
-    <p style="color: burlywood;">{{ data2 }}</p>
-    <p style="color: burlywood;">{{ data3 }}</p>
-    <p style="color: burlywood;">{{ data4 }}</p>
-    <h4 style="color: red;">Accuracy: </h4>
-    <p style="color: azure;">{{ Accuracy }}</p>
+<body>
+    <div class="container">
+        <div class="iris-icon">🌸</div>
+        <h1>IRIS Species Classification</h1>
+        
+        <form method="POST">
+            <div class="form-group">
+                <div>
+                    <input type='number' step="0.01" id="Sepal_length" name="Sepal_length" placeholder="Sepal Length (cm)" required>
+                </div>
+                <div>
+                    <input type="number" step="0.01" id="Sepal_width" name="Sepal_width" placeholder="Sepal Width (cm)" required>
+                </div>
+                <div>
+                    <input type="number" step="0.01" id="Petal_length" name="Petal_length" placeholder="Petal Length (cm)" required>
+                </div>
+                <div>
+                    <input type="number" step="0.01" id="Petal_width" name="Petal_width" placeholder="Petal Width (cm)" required>
+                </div>
+            </div>
+            
+            <button type="submit">Predict Species</button>
+        </form>
+        
+        {% if output %}
+        <div class="result-section">
+            <h2>Prediction Result</h2>
+            <div class="prediction">{{ output }}</div>
+            
+            <h3>Input Parameters</h3>
+            <div class="data-item">Sepal Length: {{ data }}</div>
+            <div class="data-item">Sepal Width: {{ data2 }}</div>
+            <div class="data-item">Petal Length: {{ data3 }}</div>
+            <div class="data-item">Petal Width: {{ data4 }}</div>
+            
+            <h4>Model Accuracy</h4>
+            <div class="accuracy">{{ Accuracy }}</div>
+        </div>
+        {% endif %}
     </div>
-    
 </body>
 </html>

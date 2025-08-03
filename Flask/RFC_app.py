@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+#from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import seaborn as sns
 import pandas as pd
@@ -17,7 +18,7 @@ def home():
 
     X_train, X_test, y_train, y_test = train_test_split(Independent_var, Dependent_var, test_size=0.5, random_state=0)
 
-    model = RandomForestClassifier(random_state=0, criterion='gini').fit(X_train, y_train)
+    model = LogisticRegression(random_state=0).fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
 

@@ -26,9 +26,8 @@ class Main:
         self.score = 0 #initialize the score into zero
         self.keys = list(self.questions.keys())
 
-        print('QUIZ menu\n1. Start\n2. Show Score\n3. Exit')
-
     def show_menu(self):
+        print('QUIZ menu\n1. Start\n2. Show Score\n3. Exit')
         choice = int(input("Enter Choice: "))
 
         #METHOD 1 for dictionary
