@@ -164,7 +164,66 @@ def C11(equa:str, answer):
     ans = sp.solve(Equation, x)
     print('Answer:', ' and '.join(map(str, ans)))
 
+def C12(arr:list[int]):
+    print(arr)
+    current = max_global = 0
+    start = end = 0
+
+    for i in range(len(arr)):
+        if arr[i] > current + arr[i]:
+            current = arr[i]
+            start = i
+        else:
+            current += arr[i]
+
+        if current > max_global:
+            max_global = current
+            end = i + 1
+
+    print('sub array:', arr[start:end])
+    print('maximum sum from sub array:', max_global)
+
+# def C12(arr: list[int]):
+
+#     print("Original array:", arr)
+#     current_sum = max_global = 0
+#     start = end = 0  # Track the start and end indices of the subarray
+    
+#     for i in range(len(arr)):
+#         print('i', i)
+#         print('current: ', current_sum)
+#         if arr[i] > current_sum + arr[i]:
+#             current_sum = arr[i]
+#             start = i  # Reset the start index
+#         else:
+#             current_sum += arr[i]
+
+#         print('start:', start)
+
+#         print('global', max_global)
+#         if current_sum > max_global:
+#             max_global = current_sum
+#             end = i
+
+#         print('end', end)
+
+#     sub_array = arr[start:end+1]
+#     print('Subarray with maximum sum:', sub_array)
+#     print('Maximum sum from subarray:', max_global)
+
+def C13(emails:list): #count the value of unique address
+    address = []
+
+    for i in range(len(emails)):
+        start = emails[i].find('@')
+        address.append(emails[i][start:])
+
+    unique = len(set(address))
+    return unique
+
+
 if __name__ == '__main__':
+    
     #C1 Convert degree to radians
     '''deg = int(input('Enter the degree: '))
     print(C1(deg), 'rad')'''
@@ -237,8 +296,8 @@ if __name__ == '__main__':
         print(f'result for {result[0]} {result[1]}')'''
 
     #Get function in dictionary
-    choice = int(input('Enter a number from 1 - 3: '))
-    C9(choice)
+    # choice = int(input('Enter a number from 1 - 3: '))
+    # C9(choice)
 
     #C10()
 
@@ -249,6 +308,7 @@ if __name__ == '__main__':
     
     C11(user_input_ex, answer_user)'''
 
-    import math
-
-    print(math.ceil(4/2))
+    #nums = input('Enter your list: ').replace(',', '').split(' ')
+    #nums = list(map(int, nums))
+    nums = [1, -3, 4, -1, 2, 1, -5, 4]
+    C12(nums)

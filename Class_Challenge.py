@@ -1,36 +1,117 @@
 import sympy as sp
-import pubchempy as pcp
-import request
+import pubchempy as pcp 
+from flask import request
 import math as mt
+import numpy as np
 
-print('-------------------Arithmetic Sequence----------------------------')
-choice = int(input('1. Arithmetic Sequence \n2. Geometric Sequence \nChoice: '))
-missing = int(input('Enter number of missing: '))
-Ar_sequence_string = input('Enter sequence: ').replace(',', ' ').split(' ') #string first to apply the aplit function
-Ar_sequence_string = list(map(int, Ar_sequence_string))
+class MyDog:
+    def __init__(self, name):
+        self.name = name
 
-if choice == 1:
-    cd = Ar_sequence_string[1] - Ar_sequence_string[0]
-    for i in range(missing):
-        val = Ar_sequence_string[-1] + cd
-        Ar_sequence_string.append(val)
+    def show_my_dog_name(self):
+        return f'my Dog name is {self.name}'
 
-    Ar_sequence_string = list(map(str, Ar_sequence_string))
-    print('Arithmetic Sequence:', ', '.join(Ar_sequence_string))
+x = MyDog('Hershey')
+print(x.show_my_dog_name())
+# def check_email(emails:list):
+#     add = []
+#     #unique = 0
 
-elif choice == 2:
-    CR = Ar_sequence_string[1]/Ar_sequence_string[0]
-    for i in range(missing): 
-        val = Ar_sequence_string[-1] * CR
-        Ar_sequence_string.append(val)
+#     for i in range(len(emails)):
+#         start = emails[i].find('@')
+#         add.append(emails[i][start+1:])
 
-    Ar_sequence_string = list(map(str, Ar_sequence_string))
-    print('Geometric Sequence:', ', '.join(Ar_sequence_string))
+#     unique = len(set(add))
+#     print(unique)
+
+# check_email(['asdsbc@gmail.com', 'xyz@yahoo.com', 'abc@gmail.com'])
+
+# def check_both(n):
+#     convert = str(n)
+#     num = list(map(int, convert))
+#     sum_num = sum(num)
+#     if sum_num % 2 == 0 and n %2==0:
+#         return True
+#     elif sum_num %2 != 0 and n%2 != 0:
+#         return True
+#     else:
+#         return False
+
+# print(check_both(123))
+
+# def check(dict1, word:str):
+#     for key, value in dict1.items():
+#         word = word.replace(key, value)
+
+#     return word
+
+# dictionary = {
+#     "g":"b",
+#     "o":"a",
+#     'd':'y'
+# }
+# print(check(dictionary, 'goodbye'))
+'''
+def key_exists(dict1, key):
+    print(key in dict1)
+
+dictionary = eval(input('Enter your dictionary: '))
+key_user = input('Enter the keys: ')
+
+key_exists(dictionary, key_user)'''
+
+# m = np.array([1, 2, 3, 4, 5, 2.0])
+# y = list(map(int, m))
+
+# for i in y:
+#     if isinstance(i, int):
+#         print(i + 7)
+
+'''
+for ind in range(len(y)):
+    if y[ind].is_integer():
+        y[ind] = int(y[ind])
+print(y)'''
+
+# print('-------------------Arithmetic Sequence----------------------------')
+# choice = int(input('1. Arithmetic Sequence \n2. Geometric Sequence \nChoice: '))
+# missing = int(input('Enter number of missing: '))
+# Ar_sequence_string = input('Enter sequence: ').replace(',', ' ').split(' ') #string first to apply the aplit function
+# Ar_sequence_string = list(map(int, Ar_sequence_string))
+
+# if choice == 1:
+#     cd = Ar_sequence_string[1] - Ar_sequence_string[0]
+#     for i in range(missing):
+#         val = Ar_sequence_string[-1] + cd
+#         Ar_sequence_string.append(val)
+
+#     Ar_sequence_string = list(map(str, Ar_sequence_string))
+#     print('Arithmetic Sequence:', ', '.join(Ar_sequence_string))
+
+# elif choice == 2:
+#     CR = Ar_sequence_string[1]/Ar_sequence_string[0]
+#     for i in range(missing): 
+#         val = Ar_sequence_string[-1] * CR
+#         Ar_sequence_string.append(val)
+
+#     Ar_sequence_string = list(map(str, Ar_sequence_string))
+#     print('Geometric Sequence:', ', '.join(Ar_sequence_string))
     
-else:
-    print('invalid input')
+# else:
+#     print('invalid input')
 
-    
+# def C12(nums:list[int]):
+#     print(max(nums))
+#     print(min(nums))
+
+# C12([5, 3, 2, 1])
+
+# x = ['scantlin', 12, 'STI COLLEGE CALAMBA']
+# x.append('Nathaniel')
+# x.append(19)
+# x.remove(12)
+# x.insert(1, 19)
+# print(x)
 
 #sample API
 '''
