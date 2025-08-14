@@ -4,15 +4,280 @@ from flask import request
 import math as mt
 import numpy as np
 
-class MyDog:
-    def __init__(self, name):
-        self.name = name
+def divisor(number):
+    divisor = []
+    for i in range(1, number+1):
+        if number % i == 0:
+            divisor.append(i)
+    return divisor
 
-    def show_my_dog_name(self):
-        return f'my Dog name is {self.name}'
+print(divisor(12))
 
-x = MyDog('Hershey')
-print(x.show_my_dog_name())
+def intersect2(interval, interval2):
+    start = max(interval[0], interval2[0])
+    end = min(interval[1], interval2[1])
+
+    if start <= end:
+        return [start, end]
+
+print(intersect2([1, 5], [3, 7]))
+
+def intersect_intervals(interval1:list, interval2:list):
+    counting1 = []
+    counting2 = []
+    intersect = sorted([])
+    for i in range(interval1[0], interval1[-1]+1):
+        counting1.append(i)
+    for i in range(interval2[0], interval2[-1]+1):
+        counting2.append(i)
+    
+    for i in range(len(interval1)):
+        if interval1[i] in counting2:
+            intersect.append(interval1[i])
+        if interval2[i] in counting1:
+            intersect.append(interval2[i])
+    
+    return intersect
+
+print(intersect_intervals([1, 5], [3, 7]))
+
+def type_with_broken_keyboard(word):
+    word = word.lower()
+    a = ''
+    b = 1
+    for i in range(len(word)):
+        if word[i] in 'aeiou':
+            b += 1
+        if b % 2 == 0:
+            a += word[i].upper()
+        else:
+            a += word[i].lower()
+    
+    return a
+    
+print(type_with_broken_keyboard('banana'))
+
+def reverse_odd_words(sentence):
+    sentence = sentence.split(' ')
+
+    sentence = sentence[::-1]
+
+    return sentence
+
+print(reverse_odd_words('Hello world this is a test'))
+
+number = 117
+primes = []
+
+max_divisor = int(number**(1/2)) + 1
+
+if number%2 == 0:
+    primes.append(2)
+    number = number//2
+
+i = 3
+while i <= max_divisor:
+    if number % i == 0:
+        primes.append(i)
+        number = number // i
+        max_divisor = int(number**0.5) + 1
+    else:
+        i += 2
+
+if number > 1:
+    primes.append(number)
+
+# i = 3
+# while i <= max_divisor:
+#     while number % i == 0:
+#         primes.append(i)
+#         number = number // i
+#         max_divisor = int(number**0.5) + 1
+#     i += 2
+
+# if number > 1:
+#     primes.append(number)
+
+print(primes)
+
+def is_number_pandigital(num):
+    return [str(n) in str(num) for n in range(10)]
+
+print([n for n in range(5)])
+
+def pandigital(int1):
+    base = '0123456789'
+    num = str(int1)
+
+    if len(num) > 10:
+        try:
+            base = sorted(base * (len(num)//10))
+        except Exception as e:
+            return False
+
+    answer = ''.join(base)
+    inputted_number = sorted(list(num))
+    check = ''.join(inputted_number)
+
+    if answer == base:
+        return True
+    else:
+        return False
+
+print(pandigital(12345678901234567890))
+
+def are_buddy_sring(str1:str, str2:str):
+    if str2 == str1:
+        return False
+    else:
+        str2 = list(str2)
+        first = str1[0]
+        second = str1[1]
+
+        for i in range(2):
+            str2.pop(0)
+    
+        str2.insert(0, first)
+        str2.insert(1, second)
+
+        word = ''.join(str2)
+
+        if word == str1:
+            return True
+        else:
+            return False
+
+print(are_buddy_sring('hello', 'ohell'))
+def spongecase(word:str):
+    word = word.lower()
+    sponge = []
+    word = list(map(str, word))
+    non_space = 0
+
+    if ' ' in word:
+        pass
+    else:
+        word.insert(0, '')
+    
+    for char in word:
+        if char.isspace():
+            sponge.append(char)
+        else:
+            if non_space % 2 == 0:
+                sponge.append(char.upper())
+            else:
+                sponge.append(char.lower())
+        non_space += 1
+
+    return ''.join(sponge)
+
+print(spongecase('python you and me'))
+
+def euclid_mullin(n):
+    sequence = []
+    product = 1  # Initialize product of previous terms
+    
+    for _ in range(n):
+        candidate = product + 1
+        next_term = smallest_prime_factor(candidate)
+        
+        sequence.append(next_term)
+        product *= next_term  # Update product
+    
+    return sequence
+
+def smallest_prime_factor(n):
+    max_divisor = int(n**0.5) + 1
+    for d in range(3, max_divisor, 2):
+        if n % d == 0:
+            return d
+    return n  # n itself is prime if no divisor found
+
+# Example: Generate first 10 terms
+print(euclid_mullin(10))
+
+def largest_prime_factor(n):
+    largest = 1
+    
+    # Divide by 2 until n is odd
+    while n % 2 == 0:
+        largest = 2
+        n = n // 2
+    
+    # Now check odd divisors up to sqrt(n)
+    i = 3
+    max_factor = int(n**0.5) + 1
+    while i <= max_factor:
+        while n % i == 0:
+            largest = i
+            n = n // i
+            max_factor = int(n**0.5) + 1  # Update max factor
+        i += 2
+    
+    # If remaining n is a prime > 2
+    if n > 2:
+        largest = n
+    
+    return largest
+# x = ['Scantlin', 'B', 'Cayson']
+# print(sorted(x, key=lambda c:(len(c), c)))
+# def ginortS(s):
+#   return ''.join(sorted(s, key=lambda c:(c.isdigit() - c.islower(), c in '02468', c)))
+
+# print(ginortS('Hackathon2021'))
+
+def sorting(s:str):
+    sorting = []
+    number = []
+    number_odd = []
+    number_even = []
+
+    for i in range(len(s)):
+        if s[i].islower():
+            sorting.append(s[i])
+    sorting = sorted(sorting)
+    for i in range(len(s)):
+        if s[i].isupper():
+            sorting.append(s[i])
+    for i in range(len(s)):
+        if s[i].isnumeric():
+            number.append(s[i])
+    numbers_check = list(map(int, number))
+
+    for i in range(len(numbers_check)):
+        if numbers_check[i] % 2 != 0 and numbers_check[i] != 0:
+            number_odd.append(str(numbers_check[i]))
+    
+    for i in range(len(numbers_check)):
+        if numbers_check[i] % 2 == 0:
+            number_even.append(str(numbers_check[i]))
+    
+    number_even = sorted(number_even)
+    
+    output = sorting + number_odd  + number_even
+
+    return ''.join(output)
+
+print(sorting('Hackathon2021'))
+
+# user_choice = input('enter chosen pet: ')
+# choices = {
+#     'dog':'Arf',
+#     'cat': 'meow',
+# }
+
+# choice = choices.get(user_choice, 'invalid')
+# print(choice)
+
+# class MyDog:
+#     def __init__(self, name):
+#         self.name = name
+
+#     def show_my_dog_name(self):
+#         return f'my Dog name is {self.name}'
+
+# x = MyDog('Hershey')
+# print(x.show_my_dog_name())
 # def check_email(emails:list):
 #     add = []
 #     #unique = 0

@@ -4,16 +4,268 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CpE_Tools</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        body {
+            background-color: #121212;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 255, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+            }
+            to {
+                text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+            }
+        }
+        
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        form {
+            margin: 30px 0;
+        }
+        
+        input[type="text"] {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ffff;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00ffff;
+            border-color: #00ffff;
+            transform: scale(1.05);
+        }
+        
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .result-box {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .your-guess {
+            color: #f0ffff;
+            background-color: rgba(240, 255, 255, 0.1);
+            border-left: 3px solid #f0ffff;
+        }
+        
+        .correct {
+            color: #ff5555;
+            background-color: rgba(255, 85, 85, 0.1);
+            border-left: 3px solid #ff5555;
+        }
+        
+        .message {
+            color: #5555ff;
+            background-color: rgba(85, 85, 255, 0.1);
+            border-left: 3px solid #5555ff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .submit-btn {
+            background-color: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: rgba(0, 255, 255, 0.4);
+            box-shadow: 0 0 10px #00ffff;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body style="background-color: black;">
-    <h1 style="text-align: center; color: aqua;">WELCOME TO RANDOM NUMBER GAME</h1>
-    <form method="POST" style="text-align: center;">
-        <input type="text" name="your_num" placeholder="Guessed">
-    </form>
+<body>
+    <div class="particles" id="particles-js"></div>
+    
+    <div class="game-container">
+        <h1>WELCOME TO RANDOM NUMBER GAME</h1>
+        
+        <form method="POST">
+            <input type="text" name="your_num" placeholder="Enter your guess" autocomplete="off">
+            <br>
+            <button type="submit" class="submit-btn">SUBMIT</button>
+        </form>
+        
+        <div class="result-box your-guess">
+            <h3>Your guess: {{ result }}</h3>
+        </div>
+        
+        <div class="result-box correct">
+            <h3>Correct number: {{ correct }}</h3>
+        </div>
+        
+        <div class="result-box message">
+            <h3>{{ message }}</h3>
+        </div>
+    </div>
 
-    <h3 style="color: azure; text-align: center;">your guessed: {{ result }}</h3>
-    <h3 style="color: red; text-align: center;">correct: {{ correct }}</h3>
-    <h3 style="color: blue; text-align: center;">{{ message }}</h3>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        particalsJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#00ffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00ffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>

@@ -6,17 +6,21 @@ app = Flask(__name__) #create the app
 @app.route('/', methods=['GET', 'POST']) #Decorator
 def home(): #function for how the backend render to frontend
     num = '' #initialize the value of name first or any variable
-    number = ''
+    number = 'hidden'
     result = ''
 
     if request.method == 'POST': #to check the backend if it has a form
-        num = request.form.get('your_num') #to get the input from the user in the web
-        number = str(random.randint(1, 10))
+        number = str(random.randint(0, 5))
+        while True:
+            num = request.form.get('your_num') #to get the input from the user in the web
+        
+            if num == number:
+                result = "CONGRATULATIONS🎉"
+                break
+            else:
+                result = 'Try Again'
 
-        if num == number:
-            result = 'CONGRATULATIONS🎉'
-        else:
-            result = "You Lost 😔"
+            return render_template('frontend.html',result=num, correct='hidden' ,message=result)
 
     return render_template('frontend.html', result=num, correct=number, message = result) #render the template and to give back the inputted value of user in the name
 

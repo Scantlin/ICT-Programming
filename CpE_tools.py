@@ -29,7 +29,7 @@ class Main:
         print('Successful')
 
     def equation(self):
-        print('List of Tools \n1. Find x\n2. Derivatives \n3. Resistor Calculator \n4. Current Solver\n5. Exit')
+        print('List of Tools \n1. Find x\n2. Derivatives \n3. Resistor Calculator \n4. Current Solver\n5. Integration Calculator\n6. Marginal Revenue\n7. Exit')
         choices = int(input('Enter your choice: '))
 
         options = {
@@ -37,7 +37,9 @@ class Main:
             2: (self.derivatives, True),
             3: (self.resistor, True),
             4: (self.current_solver, True),
-            5: (None, False)
+            5: (self.integration, True),
+            6: (self.marginal, True),
+            7: (None, False),
         }
 
         actions, should_continue = options.get(choices, (self.invalid, True))
@@ -75,6 +77,26 @@ class Main:
         self.answer.append(', '.join(map(str, answer)))
         self.equations.append(equation)
         print('---------------------------- THANK YOU ----------------------------')
+
+    def integration(self):
+        print('---------------------------- INTEGRATION CALCULATOR ----------------------------')
+        function = input('Enter your function: ')
+        sparse_function = sp.parse_expr(function, transformations='all')
+        print(f'Integrated Function: {str(sp.integrate(sparse_function)).replace('**', '^').replace('*', '')}')
+
+        print('---------------------------- THANK YOU ----------------------------')
+
+    def marginal(self):
+        print('---------------------------- Marginal Revenue ----------------------------')
+        function = input('Enter your function: ')
+        units = int(input('Enter the units: '))
+        sparse_function = sp.parse_expr(function, transformations='all') #transform the input function into python's operation system
+        derivation = sp.diff(sparse_function, x) #Derivation
+        substitution = sp.lambdify(x, derivation) #link the derivation value into the lamdify to substitute the inputted units
+        print(f'Marginal Cost: {substitution(units)}') #see the output which is the cost
+
+        print('---------------------------- THANK YOU ----------------------------')
+
 
     def resistor(self):
         print('---------------------------- RESISTOR CALCULATOR ----------------------------')
@@ -139,13 +161,13 @@ class Main:
 
                 for i in range(len(Problem)):
                     if (any(c.isalpha() for c in Problem[i]) and any(c.isdigit() for c in Problem[i])):
-                        if Problem[i].upper().endswith('C'):
+                        if Problem[i].upper().endswith('C'): #to get charge <- Coulombs
                             Charge = Problem[i][:-1]
                         elif Problem[i].upper().endswith('M'): #for minutes
                             Time = eval(Problem[i][:-1] + '* 60')
-                        elif Problem[i].upper().endswith('S'):
+                        elif Problem[i].upper().endswith('S'): #for seconds
                             Time = Problem[i][:-1]
-                        elif Problem[i].upper().endswith('A'):
+                        elif Problem[i].upper().endswith('A'): #for current A <- Ampere
                             Current = Problem[i][:-1]
                 break
 
@@ -194,7 +216,8 @@ if __name__ == '__main__':
         running = True
         while running:
             running = app.equation()
-            print('')
+        
+        print('Thank you for using the program')
 
         #for i, value in enumerate(app.equations, start=0):
         #    print(f'Equation: {value} \nAnswer: {app.answer[i]}')
