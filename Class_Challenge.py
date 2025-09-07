@@ -3,6 +3,44 @@ import pubchempy as pcp
 from flask import request
 import math as mt
 import numpy as np
+import time
+
+def show(list_song:list):
+    for i in range(len(list_song)):
+        print(list_song[i]," -> ", end="")
+    print("null")
+
+def singly():
+    songs = []
+
+    songs.append("Golden")
+    songs.append("Got to believe")
+    songs.append("Multo")
+    
+    print("Before adding Song 4")
+    show(songs)
+
+    print("After adding Song 4")
+    songs.append("Naalala ka")
+    show(songs)
+
+    print("Deleting song 2")
+    songs.remove(songs[1])
+    show(songs)
+
+singly()
+
+
+information = {
+    "John Scantlin B Cayson": 0.3,
+    "1st year College": 0.3
+}
+
+for key, value in information.items():
+    for char in key:
+        print(char, end="", flush=True)
+        time.sleep(value)
+    print()
 
 def divisor(number):
     divisor = []
