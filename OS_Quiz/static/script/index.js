@@ -3,6 +3,8 @@ class QuizGame {
         this.currentQuestion = 0;
         this.score = 0;
         this.playerName = '';
+        this.timer = null;
+        this.timeLeft = 30;
         this.questions = [
             {
                 question: "A printer is currently being used by one process, and another process also requests the printer. Since the printer cannot be shared, the second process must wait. What deadlock condition does this scenario represent?",
@@ -14,7 +16,6 @@ class QuizGame {
                 options: ["Hold and Wait", "Circular Wait", "No Preemption", "Resource Allocation Denial"],
                 answer: 0
             },
-            // Add 13 more questions here following the same format
             {
                 question: "A process is holding a disk resource. The operating system tries to reassign the disk to another process, but it cannot because resources cannot be forcibly taken. What condition prevents the OS from reallocating the disk?",
                 options: ["Hold and Wait", "Circular Wait", "No Preemption", "Deadlock Avoidance"],
@@ -94,22 +95,18 @@ class QuizGame {
         document.getElementById('nextButton').addEventListener('click', () => {
             this.nextQuestion();
         });
-
-        document.getElementById('playAgainButton').addEventListener('click', () => {
-            this.resetGame();
-        });
     }
 
     startGame() {
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        this.playerName = `${firstName} ${lastName}`;
+        const FullName = document.getElementById('FullName').value;
+        this.playerName = `${FullName}`;
         
         // Hide login, show quiz
         document.getElementById('loginSection').style.display = 'none';
         document.getElementById('quizSection').style.display = 'block';
         
         this.displayQuestion();
+        this.startTimer();
     }
 
     displayQuestion() {
@@ -133,9 +130,48 @@ class QuizGame {
         });
         
         document.getElementById('score').textContent = this.score;
+        document.getElementById('nextButton').disabled = true;
+        
+        // Reset timer
+        this.timeLeft = 30;
+        document.getElementById('timer').textContent = this.timeLeft;
+    }
+
+    startTimer() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
+        
+        this.timer = setInterval(() => {
+            this.timeLeft--;
+            document.getElementById('timer').textContent = this.timeLeft;
+            
+            if (this.timeLeft <= 0) {
+                clearInterval(this.timer);
+                this.autoNextQuestion();
+            }
+        }, 1000);
+    }
+
+    autoNextQuestion() {
+        // Highlight correct answer if time runs out
+        const correctIndex = this.questions[this.currentQuestion].answer;
+        const options = document.querySelectorAll('.option-button');
+        
+        options.forEach((button, index) => {
+            if (index === correctIndex) {
+                button.classList.add('correct');
+            }
+            button.disabled = true;
+        });
+        
+        document.getElementById('nextButton').disabled = false;
     }
 
     selectOption(selectedIndex) {
+        // Stop the timer
+        clearInterval(this.timer);
+        
         const correctIndex = this.questions[this.currentQuestion].answer;
         const options = document.querySelectorAll('.option-button');
         
@@ -159,11 +195,14 @@ class QuizGame {
 
     nextQuestion() {
         this.currentQuestion++;
-        document.getElementById('nextButton').disabled = true;
         this.displayQuestion();
+        this.startTimer();
     }
 
     async endGame() {
+        // Clear any remaining timer
+        clearInterval(this.timer);
+        
         // Send score to backend
         try {
             const firstName = document.getElementById('firstName').value;
@@ -182,20 +221,32 @@ class QuizGame {
             });
             
             if (response.ok) {
-                this.showLeaderboard();
+                this.showResults();
             }
         } catch (error) {
             console.error('Error submitting score:', error);
-            this.showLeaderboard(); // Still show leaderboard even if submission fails
+            this.showResults(); // Still show results even if submission fails
         }
     }
 
-    async showLeaderboard() {
-        // Hide quiz, show leaderboard
+    async showResults() {
+        // Hide quiz, show results
         document.getElementById('quizSection').style.display = 'none';
-        document.getElementById('leaderboardSection').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'block';
         
-        // Get leaderboard data
+        // Display final score
+        document.getElementById('finalScore').textContent = this.score;
+        
+        // Get and display leaderboard
+        await this.updateLeaderboard();
+        
+        // Set up real-time leaderboard updates
+        setInterval(() => {
+            this.updateLeaderboard();
+        }, 5000); // Update every 5 seconds
+    }
+
+    async updateLeaderboard() {
         try {
             const response = await fetch('/get_leaderboard');
             const leaderboardData = await response.json();
@@ -207,6 +258,12 @@ class QuizGame {
                 const ranks = ['1st', '2nd', '3rd'];
                 const item = document.createElement('div');
                 item.className = 'leaderboard-item';
+                
+                // Highlight current player
+                if (player.name === this.playerName) {
+                    item.classList.add('current-player');
+                }
+                
                 item.innerHTML = `
                     <span class="rank">${ranks[index]}</span>
                     <span class="name">${player.name}</span>
@@ -217,18 +274,6 @@ class QuizGame {
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
         }
-    }
-
-    resetGame() {
-        this.currentQuestion = 0;
-        this.score = 0;
-        
-        // Hide leaderboard, show login
-        document.getElementById('leaderboardSection').style.display = 'none';
-        document.getElementById('loginSection').style.display = 'block';
-        
-        // Reset form
-        document.getElementById('userForm').reset();
     }
 }
 

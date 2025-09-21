@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import json
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -26,21 +27,21 @@ def index():
 @app.route('/submit_score', methods=['POST'])
 def submit_score():
     data = request.json
-    first_name = data.get('firstName')
-    last_name = data.get('lastName')
+    full_name = data.get('FullName')
+    section = data.get('section')
     score = data.get('score')
     
-    if not all([first_name, last_name, score is not None]):
+    if not all([full_name, section, score is not None]):
         return jsonify({'error': 'Missing data'}), 400
     
     # Load existing scores
     scores = load_scores()
     
-    # Add new score
-    player_name = f"{first_name} {last_name}"
+    # Add new score with timestamp
     scores.append({
-        'name': player_name,
-        'score': score
+        'name': full_name,
+        'score': score,
+        'timestamp': datetime.now().isoformat()
     })
     
     # Save updated scores
@@ -57,6 +58,11 @@ def get_leaderboard():
     top_scores = sorted_scores[:3]
     
     return jsonify(top_scores)
+
+@app.route('/get_all_scores', methods=['GET'])
+def get_all_scores():
+    scores = load_scores()
+    return jsonify(scores)
 
 if __name__ == '__main__':
     app.run(debug=True)

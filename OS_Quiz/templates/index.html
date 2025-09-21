@@ -233,18 +233,18 @@
             <form id="userForm" class="form">
                 <input
                     type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="First name"
+                    name="FullName"
+                    id="FullName"
+                    placeholder="Full name"
                     class="name-input"
                     required
                 />
 
                 <input
                     type="text"
-                    name="lastName"
-                    id="lastName"
-                    placeholder="Last Name"
+                    name="section"
+                    id="section"
+                    placeholder="Section"
                     class="name-input"
                     required
                 />
@@ -267,7 +267,7 @@
                     </svg>
                 </button>
 
-                <h5 class="footer-login">Made by group 5</h5>
+                <h5 class="footer-login">Group 1</h5>
             </form>
         </div>
 
@@ -276,6 +276,7 @@
             <div class="quiz-header">
                 <h2>Quiz Time!</h2>
                 <div class="score-display">Score: <span id="score">0</span>/15</div>
+                <div class="timer-display">Time: <span id="timer">30</span>s</div>
             </div>
             
             <div class="question-container">
@@ -284,31 +285,41 @@
             </div>
             
             <div class="quiz-controls">
-                <button id="nextButton" class="quiz-button">Next Question</button>
+                <button id="nextButton" class="quiz-button" disabled>Next Question</button>
             </div>
         </div>
 
-        <!-- Leaderboard Section (Hidden initially) -->
-        <div id="leaderboardSection" class="leaderboard-container" style="display: none;">
-            <h2>Leaderboard</h2>
-            <div id="leaderboard" class="leaderboard">
-                <div class="leaderboard-item">
-                    <span class="rank">1st</span>
-                    <span class="name">-</span>
-                    <span class="score">-</span>
-                </div>
-                <div class="leaderboard-item">
-                    <span class="rank">2nd</span>
-                    <span class="name">-</span>
-                    <span class="score">-</span>
-                </div>
-                <div class="leaderboard-item">
-                    <span class="rank">3rd</span>
-                    <span class="name">-</span>
-                    <span class="score">-</span>
+        <!-- Results Section (Hidden initially) -->
+        <div id="resultsSection" class="results-container" style="display: none;">
+            <h2>Your Results</h2>
+            <div class="final-score">
+                <h3>Your Score: <span id="finalScore">0</span>/15</h3>
+            </div>
+            
+            <div class="leaderboard-section">
+                <h3>Top Players</h3>
+                <div id="leaderboard" class="leaderboard">
+                    <div class="leaderboard-item">
+                        <span class="rank">1st</span>
+                        <span class="name">-</span>
+                        <span class="score">-</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">2nd</span>
+                        <span class="name">-</span>
+                        <span class="score">-</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">3rd</span>
+                        <span class="name">-</span>
+                        <span class="score">-</span>
+                    </div>
                 </div>
             </div>
-            <button id="playAgainButton" class="CTA-button">Play Again</button>
+            
+            <div class="thank-you">
+                <p>Thank you for playing!</p>
+            </div>
         </div>
     </div>
     <script src="/static/script/index.js"></script>
