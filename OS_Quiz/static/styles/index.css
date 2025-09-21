@@ -17,6 +17,8 @@ body {
 .container {
     text-align: center;
     padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .form-container {
@@ -41,11 +43,18 @@ body {
     background: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
     color: #333;
+    transition: all 0.3s;
+}
+
+.name-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 5, 176, 0.3);
 }
 
 .confirmation {
     color: #FF05B0;
     margin: 1rem 0;
+    font-weight: 600;
 }
 
 .CTA-button {
@@ -60,16 +69,19 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    transition: transform 0.2s;
+    transition: all 0.3s;
+    margin: 1rem auto;
 }
 
 .CTA-button:hover {
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 5, 176, 0.4);
 }
 
 .footer-login {
     margin-top: 2rem;
     color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
 }
 
 /* Quiz Styles */
@@ -79,8 +91,7 @@ body {
     padding: 2rem;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
 }
 
 .quiz-header {
@@ -92,12 +103,29 @@ body {
     gap: 1rem;
 }
 
+.quiz-header h2 {
+    color: #FF05B0;
+    font-size: 1.8rem;
+}
+
 .score-display, .timer-display {
     font-size: 1.2rem;
     color: #FF05B0;
     background: rgba(255, 255, 255, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 8px;
+    font-weight: 600;
+}
+
+.timer-display.warning {
+    color: #ff6b6b;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 
 .question-container {
@@ -108,11 +136,13 @@ body {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     color: #E0FAFF;
+    line-height: 1.4;
 }
 
 .options-container {
     display: grid;
     gap: 1rem;
+    grid-template-columns: 1fr 1fr;
 }
 
 .option-button {
@@ -124,10 +154,16 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .option-button:hover:not(:disabled) {
     background: #FF05B0;
+    transform: translateY(-2px);
 }
 
 .option-button:disabled {
@@ -152,11 +188,13 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.3s;
+    margin-top: 1rem;
 }
 
 .quiz-button:hover:not(:disabled) {
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 5, 176, 0.4);
 }
 
 .quiz-button:disabled {
@@ -171,8 +209,13 @@ body {
     padding: 2rem;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    max-width: 500px;
-    margin: 0 auto;
+    width: 100%;
+}
+
+.results-container h2 {
+    color: #FF05B0;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .final-score {
@@ -184,8 +227,8 @@ body {
 }
 
 .final-score h3 {
-    color: #FF05B0;
-    font-size: 1.5rem;
+    color: #E0FAFF;
+    font-size: 1.8rem;
 }
 
 .leaderboard-section {
@@ -195,6 +238,7 @@ body {
 .leaderboard-section h3 {
     color: #E0FAFF;
     margin-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 .leaderboard {
@@ -223,27 +267,42 @@ body {
     font-weight: bold;
     color: #FF05B0;
     min-width: 40px;
+    font-size: 1.1rem;
 }
 
 .name {
     flex: 1;
     text-align: left;
     margin-left: 1rem;
+    font-weight: 500;
 }
 
 .score {
     font-weight: bold;
     min-width: 50px;
+    color: #E0FAFF;
 }
 
 .thank-you {
     margin-top: 2rem;
     color: rgba(255, 255, 255, 0.7);
     font-style: italic;
+    font-size: 1.1rem;
+}
+
+.no-scores, .error {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}
+
+.error {
+    color: #ff6b6b;
 }
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .container {
         padding: 1rem;
     }
@@ -251,9 +310,43 @@ body {
     .quiz-header {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.5rem;
     }
     
     .score-display, .timer-display {
+        text-align: center;
+    }
+    
+    .options-container {
+        grid-template-columns: 1fr;
+    }
+    
+    #question {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container, .quiz-container, .results-container {
+        padding: 1.5rem;
+    }
+    
+    .quiz-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .final-score h3 {
+        font-size: 1.5rem;
+    }
+    
+    .leaderboard-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .name {
+        margin-left: 0;
         text-align: center;
     }
 }

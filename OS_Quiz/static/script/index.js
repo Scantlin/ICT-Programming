@@ -97,9 +97,30 @@ class QuizGame {
         });
     }
 
-    startGame() {
-        const FullName = document.getElementById('FullName').value;
-        this.playerName = `${FullName}`;
+    async startGame() {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        
+        if (!firstName || !lastName) {
+            alert('Please enter both first and last name');
+            return;
+        }
+        
+        this.playerName = `${firstName} ${lastName}`;
+        
+        // Test backend connection first
+        try {
+            const response = await fetch('/health');
+            if (!response.ok) {
+                throw new Error('Backend not responding');
+            }
+            const health = await response.json();
+            console.log('Server health:', health);
+        } catch (error) {
+            alert('Server connection failed. Please make sure the backend is running.');
+            console.error('Server connection error:', error);
+            return;
+        }
         
         // Hide login, show quiz
         document.getElementById('loginSection').style.display = 'none';
@@ -116,7 +137,7 @@ class QuizGame {
         }
 
         const question = this.questions[this.currentQuestion];
-        document.getElementById('question').textContent = question.question;
+        document.getElementById('question').textContent = `Question ${this.currentQuestion + 1}/15: ${question.question}`;
         
         const optionsContainer = document.getElementById('options');
         optionsContainer.innerHTML = '';
@@ -205,8 +226,8 @@ class QuizGame {
         
         // Send score to backend
         try {
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
             
             const response = await fetch('/submit_score', {
                 method: 'POST',
@@ -220,12 +241,20 @@ class QuizGame {
                 })
             });
             
+            const result = await response.json();
+            
             if (response.ok) {
+                console.log('Score submitted successfully:', result);
                 this.showResults();
+            } else {
+                console.error('Failed to submit score:', result);
+                alert('Failed to submit score. Please try again.');
+                this.showResults(); // Still show results
             }
         } catch (error) {
             console.error('Error submitting score:', error);
-            this.showResults(); // Still show results even if submission fails
+            alert('Network error. Your score may not have been saved.');
+            this.showResults(); // Still show results
         }
     }
 
@@ -249,10 +278,19 @@ class QuizGame {
     async updateLeaderboard() {
         try {
             const response = await fetch('/get_leaderboard');
+            if (!response.ok) {
+                throw new Error('Failed to fetch leaderboard');
+            }
+            
             const leaderboardData = await response.json();
             
             const leaderboard = document.getElementById('leaderboard');
             leaderboard.innerHTML = '';
+            
+            if (leaderboardData.length === 0) {
+                leaderboard.innerHTML = '<div class="no-scores">No scores yet. Be the first!</div>';
+                return;
+            }
             
             leaderboardData.forEach((player, index) => {
                 const ranks = ['1st', '2nd', '3rd'];
@@ -273,6 +311,8 @@ class QuizGame {
             });
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboard.innerHTML = '<div class="error">Error loading leaderboard</div>';
         }
     }
 }
