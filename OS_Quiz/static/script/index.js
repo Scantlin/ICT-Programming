@@ -31,53 +31,53 @@ class QuizGame {
                 answer: 0
             },
             {
-                question: "Who wrote 'Romeo and Juliet'?",
-                options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-                answer: 1
-            },
-            {
-                question: "What is the chemical symbol for gold?",
-                options: ["Go", "Gd", "Au", "Ag"],
+                question: "A banking system checks every resource request with the Banker’s Algorithm. It only grants the request if the system will remain in a safe state. Which strategy is being used?",
+                options: ["Deadlock Prevention", "Deadlock Detection", "Deadlock Avoidance", "Circular Wait"],
                 answer: 2
             },
             {
-                question: "Which is not a primary color?",
-                options: ["Red", "Blue", "Green", "Yellow"],
-                answer: 3
-            },
-            {
-                question: "How many sides does a hexagon have?",
-                options: ["5", "6", "7", "8"],
+                question: "A system identifies that five processes are deadlocked. The operating system aborts all five processes and restarts them from the beginning. What recovery method is used here?",
+                options: ["Rollback to checkpoint", "Abort all deadlocked process", "Preempt resources", "Abort Process one by one"],
                 answer: 1
             },
             {
-                question: "What is the largest mammal?",
-                options: ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+                question: "The OS checks a resource request against the Banker’s Algorithm and denies it if granting it would lead to an unsafe state. Which strategy is used?",
+                options: ["Deadlock Prevention", "Deadlock Avoidance", "Deadlock Detection", "Circular Wait"],
                 answer: 1
             },
             {
-                question: "Which year did World War II end?",
-                options: ["1943", "1944", "1945", "1946"],
+                question: "A new process requests more resources than what is available. The system refuses to start it. What avoidance method is applied?",
+                options: ["Resource Allocation Denial", "Deadlock Detection", "Process Initiation Denial", "Circular Wait"],
                 answer: 2
             },
             {
-                question: "What is the hardest natural substance on Earth?",
-                options: ["Gold", "Iron", "Diamond", "Platinum"],
-                answer: 2
-            },
-            {
-                question: "Which element has the chemical symbol 'O'?",
-                options: ["Gold", "Oxygen", "Osmium", "Oganesson"],
+                question: "A process holding a scanner requests a printer. The OS denies the request because granting it might lead to deadlock. Which method is used?",
+                options: ["Process Initiation Denial", "Resource Allocation Denial", "Deadlock Detection", "Circular Wait"],
                 answer: 1
             },
             {
-                question: "How many continents are there?",
-                options: ["5", "6", "7", "8"],
+                question: "The OS detects a deadlock among 3 processes and terminates all of them immediately. Which recovery method is applied?",
+                options: ["Abort all process", "Abort process at a time", "Resource Preemption", "Rollback"],
+                answer: 0
+            },
+            {
+                question: "The system detects deadlock and kills one process at a time until no cycle exists. Which recovery method is this?",
+                options: ["Abort all process", "Resource Preemption", "Abort processes one by one", "Process Initiation Denial"],
                 answer: 2
             },
             {
-                question: "What is the largest desert in the world?",
-                options: ["Sahara", "Gobi", "Antarctic", "Arabian"],
+                question: "The OS rolls back a process to its last safe checkpoint and restarts it to resolve deadlock. Which recovery method is applied?",
+                options: ["Resource Preemption", "Abort all processes", "Rollback", "Circular Wait Prevention"],
+                answer: 2
+            },
+            {
+                question: "A system detects a deadlock and temporarily takes memory away from one process to give it to another. Which recovery method is this?",
+                options: ["Rollback", "Resource Preemption", "Abort processes one by one", "Deadlock Avoidance"],
+                answer: 1
+            },
+            {
+                question: "The OS must terminate one of the deadlocked processes. It chooses the process with the lowest priority to kill. Which Criterion is being used?",
+                options: ["Least resources allocated", "Most remaining time", "lowest priority", "Least CPU time consumed"],
                 answer: 2
             }
         ];
