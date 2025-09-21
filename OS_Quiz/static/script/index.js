@@ -5,30 +5,30 @@ class QuizGame {
         this.playerName = '';
         this.questions = [
             {
-                question: "What is the capital of France?",
-                options: ["Paris", "London", "Berlin", "Madrid"],
-                answer: 0
+                question: "A printer is currently being used by one process, and another process also requests the printer. Since the printer cannot be shared, the second process must wait. What deadlock condition does this scenario represent?",
+                options: ["Hold and Wait", "Circular Wait", "Mutual Exclusion", "No Preemption"],
+                answer: 2
             },
             {
-                question: "Which planet is known as the Red Planet?",
-                options: ["Venus", "Mars", "Jupiter", "Saturn"],
-                answer: 1
+                question: "A process is holding a memory block while simultaneously requesting access to a CPU cycle. Another process is holding the CPU cycle and waiting for the memory block. Which deadlock condition is demonstrated?",
+                options: ["Hold and Wait", "Circular Wait", "No Preemption", "Resource Allocation Denial"],
+                answer: 0
             },
             // Add 13 more questions here following the same format
             {
-                question: "What is 2 + 2?",
-                options: ["3", "4", "5", "6"],
+                question: "A process is holding a disk resource. The operating system tries to reassign the disk to another process, but it cannot because resources cannot be forcibly taken. What condition prevents the OS from reallocating the disk?",
+                options: ["Hold and Wait", "Circular Wait", "No Preemption", "Deadlock Avoidance"],
+                answer: 2
+            },
+            {
+                question: "Process A is holding a printer and waiting for a scanner. Process B is holding the scanner and waiting for a keyboard. Process C is holding the keyboard and waiting for the printer. What type of situation is this?",
+                options: ["Deadlock Avoidance", "Circular Wait", "Indirect Prevention", "Resource Allocation Denial"],
                 answer: 1
             },
             {
-                question: "Which language is primarily used for web development?",
-                options: ["Python", "JavaScript", "Java", "C++"],
-                answer: 1
-            },
-            {
-                question: "What is the largest ocean on Earth?",
-                options: ["Atlantic", "Indian", "Arctic", "Pacific"],
-                answer: 3
+                question: "The system requires all processes to request their resources at the beginning of execution. If resources aren’t available, the process must wait until all requested resources can be allocated simultaneously. What condition is being prevented here?",
+                options: ["Hold and Wait", "Cirular Wait", "No Preemption", "Deadlock Detection"],
+                answer: 0
             },
             {
                 question: "Who wrote 'Romeo and Juliet'?",
