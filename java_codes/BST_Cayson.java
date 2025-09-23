@@ -1,3 +1,6 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 // BST Node class
 class BSTNode {
     int key;
@@ -120,18 +123,33 @@ class BST {
 // Main class to test the BST implementation
 public class BST_Cayson {
     public static void main(String[] args) {
+
+        //Scanner Object
+        Scanner scan = new Scanner(System.in);
+
         BST t = new BST(); // Object of BST that named t
 
-        int vals[] = {50, 30, 70, 20, 40, 60, 80}; //create an array containing the values (elements)
+        int[] vals = new int[5]; //create an array containing the values (elements)
         
         // Insert elements using for loops
-        System.out.print("Inputted Values: "); 
-        for (int i = 0; i < vals.length; i++){
-            t.insert(vals[i]);
-            System.out.print(vals[i] + " ");
+        System.out.println("Enter values: ");
+
+        try{
+            for (int i = 0; i < vals.length; i++){
+                vals[i] = scan.nextInt();
+                t.insert(vals[i]);
+                }
         }
         
+        catch(InputMismatchException e){
+            System.out.println("Wrong input");
+        }
 
+        finally {
+        System.out.print("\nInputted Values: ");
+        for (int i = 0; i < vals.length; i++){
+            System.out.print(vals[i] + " ");
+        }
         // Print inorder traversal
         System.out.print("\nInorder traversal: ");
         t.InorderPrint();
@@ -166,8 +184,11 @@ public class BST_Cayson {
         t.InorderPrint();
 
         //for value 40
-        t.delete(40);
-        System.out.print("After Deleting 40: ");
+        t.delete(50);
+        System.out.print("After Deleting 50: ");
         t.InorderPrint();
+
+        scan.close();
     }
+}
 }
