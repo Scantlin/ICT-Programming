@@ -14,8 +14,8 @@ def main():
     }
 
     dataframe = pd.DataFrame(data) #use dataframe if you have a data store in dictionary
-
-    Independent_var = dataframe[["Size", "Sex"]]
+    
+    Independent_var = dataframe.drop(["Price"], axis=1) #Drop the Dependent
     Dependent_var = dataframe["Price"]
 
     #Split the Data
@@ -33,8 +33,8 @@ def main():
     y_train_pred = model.predict(X_train_encoded)
     y_test_pred = model.predict(X_test_encoded)
 
-    print(f'TRAIN MAE: {mean_absolute_error(y_train, y_train_pred):.2f} R2: {r2_score(y_train, y_train_pred):.2f}')
-    print(f'TEST MAE: {mean_absolute_error(y_test, y_test_pred):.2f} R2: {r2_score(y_test, y_test_pred):.2f}')
+    print(f'TRAIN MAE: {mean_absolute_error(y_train, y_train_pred):.2f} R2: {(r2_score(y_train, y_train_pred)*100):.2f}%')
+    print(f'TEST MAE: {mean_absolute_error(y_test, y_test_pred):.2f} R2: {(r2_score(y_test, y_test_pred) * 100 ):.2f}%')
 
 if __name__ == '__main__':
     main()
