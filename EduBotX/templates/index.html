@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .upload-section {
+            border: 3px dashed #4facfe;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: #e8f4fd;
+            transform: scale(1.02);
+        }
+        
+        .upload-section.has-file {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        
+        .status-panel {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .questions-panel {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .question-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .option.correct {
+            border-color: #4CAF50;
+            background: #d4edda;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Educational Assistant</h1>
+            <p>Upload PDF → Generate Questions → Voice Quiz → Instant Feedback</p>
+        </div>
+        
+        <div class="content">
+            <!-- Status Panel -->
+            <div class="status-panel">
+                <div class="status-item">
+                    <span>System Status:</span>
+                    <span id="systemStatus">Ready</span>
+                </div>
+                <div class="status-item">
+                    <span>ESP32 Status:</span>
+                    <span id="esp32Status">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span>Questions Generated:</span>
+                    <span id="questionsCount">0</span>
+                </div>
+            </div>
+            
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert"></div>
+            
+            <!-- Upload Section -->
+            <div id="uploadSection">
+                <div class="upload-section" id="dropZone">
+                    <div style="font-size: 4em; margin-bottom: 20px;">📁</div>
+                    <h3 id="dropZoneTitle">Upload Your PDF Document</h3>
+                    <p id="dropZoneText">Drag & drop your PDF file here or click to browse</p>
+                    <p><small>Supported: Text-based PDF files up to 16MB</small></p>
+                    
+                    <div class="file-info" id="fileInfo">
+                        <strong>Selected file:</strong> <span id="fileName"></span>
+                        <br>
+                        <small>Size: <span id="fileSize"></span></small>
+                    </div>
+                    
+                    <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
+                    <br>
+                    <button class="btn" onclick="document.getElementById('pdfFile').click()">
+                        Choose PDF File
+                    </button>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" id="processBtn" onclick="processPDF()" disabled>
+                        Generate Questions from PDF
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <!-- Loading Section -->
+            <div id="loadingSection" class="loading">
+                <div class="spinner"></div>
+                <h3>Processing Your PDF</h3>
+                <p id="loadingMessage">Extracting text and generating questions...</p>
+                <p><small>This may take a few moments</small></p>
+            </div>
+            
+            <!-- Questions Preview -->
+            <div id="questionsSection" class="questions-panel">
+                <h2>Generated Questions</h2>
+                <div id="questionsList"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="startQuiz()">
+                        🎤 Start Voice Quiz
+                    </button>
+                    <button class="btn btn-warning" onclick="resetSystem()">
+                        📄 Upload New PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentQuestions = [];
+        let currentFile = null;
+        const ESP32_IP = "192.168.1.100"; // Change to your ESP32 IP
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateESP32Status();
+            setupDragAndDrop();
+            setInterval(updateESP32Status, 30000); // Update every 30 seconds
+        });
+        
+        // Enhanced Drag and drop functionality
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('pdfFile');
+            
+            // Click to open file dialog
+            dropZone.addEventListener('click', (e) => {
+                // Don't trigger if clicking on button
+                if (e.target.tagName !== 'BUTTON') {
+                    fileInput.click();
+                }
+            });
+            
+            // Drag over event
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
+            
+            // Drag leave event
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            });
+            
+            // Drop event - FIXED
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                console.log('Files dropped:', files);
+                
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (isValidPDF(file)) {
+                        handleFileSelection(file);
+                    } else {
+                        showAlert('Please drop a valid PDF file', 'error');
+                    }
+                }
+            });
+            
+            // File input change event
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (isValidPDF(file)) {
+                        handleFileSelection(file);
+                    } else {
+                        showAlert('Please select a valid PDF file', 'error');
+                    fileInput.value = '';
+                    resetFileSelection();
+                    document.getElementById('processBtn').disabled = true;
+                    document.getElementById('fileInfo').style.display = 'none';
+                    document.getElementById('dropZone').classList.remove('has-file');
+                    document.getElementById('dropZoneTitle').textContent = 'Upload Your PDF Document';
+                    document.getElementById('dropZoneText').textContent = 'Drag & drop your PDF file here or click to browse';
+                    document.getElementById('dropZoneText').style.color = '';
+                    document.getElementById('dropZone').style.borderColor = '#4facfe';
+                    document.getElementById('dropZone').style.background = '';
+                    document.getElementById('dropZone').querySelector('div').textContent = '📁';
+                }
+                }
+            });
+        }
+        
+        function isValidPDF(file) {
+            // Check if file is PDF
+            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            if (!isPDF) {
+                showAlert('Please select a PDF file (.pdf)', 'error');
+                return false;
+            }
+            
+            // Check file size (16MB max)
+            const maxSize = 16 * 1024 * 1024; // 16MB in bytes
+            if (file.size > maxSize) {
+                showAlert('File too large. Maximum size is 16MB', 'error');
+                return false;
+            }
+            
+            if (file.size === 0) {
+                showAlert('File is empty', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function handleFileSelection(file) {
+            currentFile = file;
+            
+            // Update UI
+            document.getElementById('dropZoneTitle').textContent = 'PDF File Selected';
+            document.getElementById('dropZoneText').textContent = 'Ready to generate questions';
+            document.getElementById('dropZoneText').style.color = '#4CAF50';
+            document.getElementById('dropZone').classList.add('has-file');
+            document.getElementById('dropZone').style.borderColor = '#4CAF50';
+            document.getElementById('dropZone').style.background = '#e8f5e8';
+            document.getElementById('dropZone').querySelector('div').textContent = '✅';
+            
+            // Show file info
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            document.getElementById('fileInfo').style.display = 'block';
+            
+            // Enable process button
+            document.getElementById('processBtn').disabled = false;
+            
+            hideAlert();
+            console.log('File selected:', file.name, file.size, file.type);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function resetFileSelection() {
+            currentFile = null;
+            document.getElementById('pdfFile').value = '';
+        }
+        
+        async function processPDF() {
+            if (!currentFile) {
+                showAlert('Please select a PDF file first', 'error');
+                return;
+            }
+            
+            // Show loading state
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'block';
+            updateProgress(10);
+            
+            const formData = new FormData();
+            formData.append('pdf', currentFile);
+            
+            try {
+                updateProgress(30);
+                document.getElementById('loadingMessage').textContent = 'Uploading PDF...';
+                
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
+                updateProgress(50);
+                document.getElementById('loadingMessage').textContent = 'Extracting text from PDF...';
+                
+                const result = await response.json();
+                console.log('Server response:', result);
+                
+                updateProgress(80);
+                document.getElementById('loadingMessage').textContent = 'Generating questions with AI...';
+                
+                if (result.success) {
+                    updateProgress(100);
+                    document.getElementById('loadingMessage').textContent = 'Questions generated successfully!';
+                    
+                    currentQuestions = result.questions;
+                    displayQuestions(result.questions);
+                    showAlert(`Successfully generated ${result.questions_count} questions!`, 'success');
+                    
+                    if (result.esp32_sent) {
+                        showAlert('Questions sent to ESP32 successfully!', 'success');
+                    } else {
+                        showAlert('Questions generated but ESP32 is offline', 'warning');
+                    }
+                    
+                } else {
+                    showAlert('Error: ' + result.error, 'error');
+                    resetToUpload();
+                }
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showAlert('Upload failed: ' + error.message, 'error');
+                resetToUpload();
+            }
+        }
+        
+        function displayQuestions(questions) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('questionsSection').style.display = 'block';
+            document.getElementById('questionsCount').textContent = questions.questions.length;
+            
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            
+            questions.questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-card';
+                questionDiv.innerHTML = `
+                    <h4>Question ${index + 1}</h4>
+                    <p>${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, i) => 
+                            `<div class="option ${q.correct_answer === String.fromCharCode(65 + i) ? 'correct' : ''}">
+                                <strong>${String.fromCharCode(65 + i)}:</strong> ${opt}
+                            </div>`
+                        ).join('')}
+                    </div>
+                    <p><strong>Correct Answer: ${q.correct_answer}</strong></p>
+                `;
+                questionsList.appendChild(questionDiv);
+            });
+        }
+        
+        async function startQuiz() {
+            try {
+                showAlert('Starting quiz on ESP32...', 'info');
+                
+                const response = await fetch('/send-to-esp32', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Quiz started on ESP32! Listen for questions...', 'success');
+                } else {
+                    showAlert('Failed to start quiz: ' + result.error, 'error');
+                }
+                
+            } catch (error) {
+                showAlert('Failed to start quiz: ' + error.message, 'error');
+            }
+        }
+        
+        async function updateESP32Status() {
+            try {
+                const response = await fetch('/status');
+                const status = await response.json();
+                
+                if (status.status === 'esp32_offline') {
+                    document.getElementById('esp32Status').textContent = 'Offline';
+                    document.getElementById('esp32Status').style.color = '#dc3545';
+                } else {
+                    document.getElementById('esp32Status').textContent = 'Online';
+                    document.getElementById('esp32Status').style.color = '#28a745';
+                }
+            } catch (error) {
+                document.getElementById('esp32Status').textContent = 'Offline';
+                document.getElementById('esp32Status').style.color = '#dc3545';
+            }
+        }
+        
+        function resetSystem() {
+            document.getElementById('questionsSection').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'block';
+            resetFileSelection();
+            document.getElementById('dropZoneTitle').textContent = 'Upload Your PDF Document';
+            document.getElementById('dropZoneText').textContent = 'Drag & drop your PDF file here or click to browse';
+            document.getElementById('dropZoneText').style.color = '';
+            document.getElementById('dropZone').classList.remove('has-file');
+            document.getElementById('dropZone').style.borderColor = '#4facfe';
+            document.getElementById('dropZone').style.background = '';
+            document.getElementById('dropZone').querySelector('div').textContent = '📁';
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('processBtn').disabled = true;
+            document.getElementById('questionsCount').textContent = '0';
+            hideAlert();
+        }
+        
+        function resetToUpload() {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'block';
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progress').style.width = percent + '%';
+        }
+        
+        function showAlert(message, type) {
+            const alert = document.getElementById('alertMessage');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            // Auto-hide success/info messages after 5 seconds
+            if (type === 'success' || type === 'info') {
+                setTimeout(hideAlert, 5000);
+            }
+        }
+        
+        function hideAlert() {
+            document.getElementById('alertMessage').style.display = 'none';
+        }
+        
+        // Debug function to check if drag events are firing
+        document.addEventListener('dragenter', (e) => {
+            console.log('dragenter', e);
+        });
+        
+        document.addEventListener('dragover', (e) => {
+            console.log('dragover', e);
+        });
+        
+        document.addEventListener('dragleave', (e) => {
+            console.log('dragleave', e);
+        });
+        
+        document.addEventListener('drop', (e) => {
+            console.log('drop', e);
+        });
+    </script>
+</body>
+</html>
