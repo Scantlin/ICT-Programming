@@ -1,54 +1,59 @@
 {
   "questions": [
     {
-      "question": "According to the text, what are the two main phases of industrialization?",
+      "question": "What is the primary characteristic of the Digital Age according to the text?",
       "options": [
-        "A) The Agrarian Revolution and the Digital Age",
-        "B) The First Industrial Revolution (1750-1850) and the Second Industrial Revolution (1870-1914)",
-        "C) The Bronze Age and the Iron Age",
-        "D) The Early Modern Period and the Contemporary Era"
+        "The decline of traditional media",
+        "The rapid growth of digital technologies, especially the Internet",
+        "Increased reliance on face-to-face communication",
+        "A decrease in global connectivity"
       ],
-      "correct_answer": "B"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "Which invention from the First Industrial Revolution, developed by James Hargreaves, significantly increased textile production by allowing workers to produce multiple threads at once?",
+      "question": "Which of the following best describes cyberbullying as defined in the text?",
       "options": [
-        "A) Puddling Furnace",
-        "B) Cotton Gin",
-        "C) Spinning Jenny",
-        "D) Macadamized Roads"
+        "Using digital platforms to steal personal information",
+        "Obtaining unauthorized access to computer systems",
+        "Using digital platforms to harass or intimidate others",
+        "Tricking people into stealing money or personal information"
       ],
-      "correct_answer": "C"
+      "correct_answer": "C",
+      "type": "multiple_choice"
     },
     {
-      "question": "Nikolaus Otto developed which significant innovation in 1876, enabling a more efficient alternative to steam power?",
+      "question": "According to the text, what is a potential consequence of identity theft?",
       "options": [
-        "A) The first practical telephone",
-        "B) The four-stroke internal combustion engine",
-        "C) The first long-lasting light bulb",
-        "D) The method for macadamized roads"
+        "Receiving unsolicited emails with prizes",
+        "Experiencing unauthorized purchases or fake accounts",
+        "Devices becoming infected with viruses",
+        "Having your online accounts hacked"
       ],
-      "correct_answer": "B"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "What was the primary purpose of the Puddling Furnace, developed by Henry Cort during the First Industrial Revolution?",
+      "question": "What is the purpose of antivirus software as mentioned in the text?",
       "options": [
-        "A) To separate cotton fibers from seeds",
-        "B) To improve transportation networks through better road construction",
-        "C) To remove impurities from pig iron to produce higher-quality wrought iron",
-        "D) To enable real-time conversations over long distances"
+        "To create strong passwords",
+        "To protect devices from viruses and malware",
+        "To avoid clicking suspicious links",
+        "To gain unauthorized access to systems"
       ],
-      "correct_answer": "C"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "Who patented the first practical telephone in 1876, an innovation that transformed business and personal interactions?",
+      "question": "Which of the following is an example of a cyber threat that involves gaining unauthorized access to a system or device?",
       "options": [
-        "A) Thomas Edison",
-        "B) Karl Benz",
-        "C) Alexander Graham Bell",
-        "D) Eli Whitney"
+        "Cyberbullying",
+        "Identity Theft",
+        "Online scams",
+        "Hacking"
       ],
-      "correct_answer": "C"
+      "correct_answer": "D",
+      "type": "multiple_choice"
     }
   ]
 }
