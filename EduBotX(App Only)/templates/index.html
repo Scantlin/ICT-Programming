@@ -566,518 +566,591 @@
     </div>
 
     <script>
-        // Global variables
-        let currentQuestions = [];
-        let currentFile = null;
-        let currentQuestionType = 'multiple_choice';
-        let showingAnswers = false;
-        let userAnswers = [];
-        let quizScore = 0;
+    // Global variables
+    let currentQuestions = [];
+    let currentFile = null;
+    let currentQuestionType = 'multiple_choice';
+    let showingAnswers = false;
+    let userAnswers = [];
+    let quizScore = 0;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setupDragAndDrop();
-            loadExistingQuestions();
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDragAndDrop();
+        loadExistingQuestions();
+    });
+    
+    // Enhanced Drag and drop functionality
+    function setupDragAndDrop() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('pdfFile');
+        
+        // Click to open file dialog
+        dropZone.addEventListener('click', (e) => {
+            // Don't trigger if clicking on button
+            if (e.target.tagName !== 'BUTTON') {
+                fileInput.click();
+            }
         });
         
-        // Enhanced Drag and drop functionality
-        function setupDragAndDrop() {
-            const dropZone = document.getElementById('dropZone');
-            const fileInput = document.getElementById('pdfFile');
-            
-            // Click to open file dialog
-            dropZone.addEventListener('click', (e) => {
-                // Don't trigger if clicking on button
-                if (e.target.tagName !== 'BUTTON') {
-                    fileInput.click();
-                }
-            });
-            
-            // Drag over event
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropZone.classList.add('dragover');
-            });
-            
-            // Drag leave event
-            dropZone.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropZone.classList.remove('dragover');
-            });
-            
-            // Drop event
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropZone.classList.remove('dragover');
-                
-                const files = e.dataTransfer.files;
-                console.log('Files dropped:', files);
-                
-                if (files.length > 0) {
-                    const file = files[0];
-                    if (isValidPDF(file)) {
-                        handleFileSelection(file);
-                    } else {
-                        showAlert('Please drop a valid PDF file', 'error');
-                    }
-                }
-            });
-            
-            // File input change event
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    const file = e.target.files[0];
-                    if (isValidPDF(file)) {
-                        handleFileSelection(file);
-                    } else {
-                        showAlert('Please select a valid PDF file', 'error');
-                        resetFileSelection();
-                    }
-                }
-            });
-        }
+        // Drag over event
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+        });
         
-        function isValidPDF(file) {
-            // Check if file is PDF
-            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-            if (!isPDF) {
-                showAlert('Please select a PDF file (.pdf)', 'error');
-                return false;
-            }
-            
-            // Check file size (16MB max)
-            const maxSize = 16 * 1024 * 1024; // 16MB in bytes
-            if (file.size > maxSize) {
-                showAlert('File too large. Maximum size is 16MB', 'error');
-                return false;
-            }
-            
-            if (file.size === 0) {
-                showAlert('File is empty', 'error');
-                return false;
-            }
-            
-            return true;
-        }
+        // Drag leave event
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+        });
         
-        function handleFileSelection(file) {
-            currentFile = file;
+        // Drop event
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
             
-            // Update UI
-            document.getElementById('dropZoneTitle').textContent = 'PDF File Selected';
-            document.getElementById('dropZoneText').textContent = 'Ready to generate questions';
-            document.getElementById('dropZoneText').style.color = '#4CAF50';
-            document.getElementById('dropZone').classList.add('has-file');
-            document.getElementById('dropZone').style.borderColor = '#4CAF50';
-            document.getElementById('dropZone').style.background = '#e8f5e8';
-            document.getElementById('dropZone').querySelector('div').textContent = '✅';
+            const files = e.dataTransfer.files;
+            console.log('Files dropped:', files);
             
-            // Show file info
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = formatFileSize(file.size);
-            document.getElementById('fileInfo').style.display = 'block';
-            
-            // Enable process button
-            document.getElementById('processBtn').disabled = false;
-            
-            hideAlert();
-            console.log('File selected:', file.name, file.size, file.type);
-        }
-        
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-        
-        function resetFileSelection() {
-            currentFile = null;
-            document.getElementById('pdfFile').value = '';
-            document.getElementById('processBtn').disabled = true;
-            document.getElementById('fileInfo').style.display = 'none';
-            document.getElementById('dropZone').classList.remove('has-file');
-            document.getElementById('dropZoneTitle').textContent = 'Upload Your PDF Document';
-            document.getElementById('dropZoneText').textContent = 'Drag & drop your PDF file here or click to browse';
-            document.getElementById('dropZoneText').style.color = '';
-            document.getElementById('dropZone').style.borderColor = '#4facfe';
-            document.getElementById('dropZone').style.background = '';
-            document.getElementById('dropZone').querySelector('div').textContent = '📁';
-        }
-        
-        function selectQuestionType(type) {
-            currentQuestionType = type;
-            
-            // Update UI
-            document.querySelectorAll('.type-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-        }
-        
-        async function processPDF() {
-            if (!currentFile) {
-                showAlert('Please select a PDF file first', 'error');
-                return;
-            }
-            
-            try {
-                // Show loading state
-                document.getElementById('uploadSection').style.display = 'none';
-                document.getElementById('loadingSection').style.display = 'block';
-                document.getElementById('progressBar').style.display = 'block';
-                updateProgress(10);
-
-                const formData = new FormData();
-                formData.append('pdf', currentFile);
-                formData.append('question_type', currentQuestionType);
-                formData.append('num_questions', document.getElementById('numQuestions').value);
-
-                updateProgress(30);
-                document.getElementById('loadingMessage').textContent = 'Uploading PDF...';
-
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(result.error || `Server error: ${response.status}`);
-                }
-
-                if (result.success) {
-                    updateProgress(100);
-                    document.getElementById('loadingMessage').textContent = 'Questions generated successfully!';
-                    
-                    currentQuestions = result.questions;
-                    currentQuestionType = result.question_type;
-                    userAnswers = []; // Reset user answers
-                    quizScore = 0; // Reset score
-                    displayQuestions(result.questions);
-                    showAlert(result.message, 'success');
-                    
-                    // Save to localStorage
-                    localStorage.setItem('generatedQuestions', JSON.stringify(result.questions));
-                    localStorage.setItem('questionType', result.question_type);
-                    
+            if (files.length > 0) {
+                const file = files[0];
+                if (isValidPDF(file)) {
+                    handleFileSelection(file);
                 } else {
-                    throw new Error(result.error || 'Unknown error occurred');
+                    showAlert('Please drop a valid PDF file', 'error');
                 }
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                showAlert('Processing failed: ' + error.message, 'error');
-                resetToUpload();
             }
+        });
+        
+        // File input change event
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                if (isValidPDF(file)) {
+                    handleFileSelection(file);
+                } else {
+                    showAlert('Please select a valid PDF file', 'error');
+                    resetFileSelection();
+                }
+            }
+        });
+    }
+    
+    function isValidPDF(file) {
+        // Check if file is PDF
+        const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        if (!isPDF) {
+            showAlert('Please select a PDF file (.pdf)', 'error');
+            return false;
         }
         
-        function displayQuestions(questions) {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('questionsSection').style.display = 'block';
-            document.getElementById('questionsCount').textContent = questions.questions.length;
-            
-            // Update question type badge
-            const typeBadge = document.getElementById('currentQuestionType');
-            typeBadge.textContent = currentQuestionType.replace('_', ' ');
-            
-            const questionsList = document.getElementById('questionsList');
-            questionsList.innerHTML = '';
-            
-            // Check if all questions are answered
-            const allAnswered = userAnswers.length === questions.questions.length;
-            
-            questions.questions.forEach((q, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question-card';
-                
-                let questionContent = '';
-                const type = q.type || currentQuestionType;
-                const userAnswer = userAnswers[index];
-                const isCorrect = userAnswer ? userAnswer.isCorrect : false;
-                const showCorrectAnswer = showingAnswers || (userAnswer && allAnswered);
+        // Check file size (16MB max)
+        const maxSize = 16 * 1024 * 1024; // 16MB in bytes
+        if (file.size > maxSize) {
+            showAlert('File too large. Maximum size is 16MB', 'error');
+            return false;
+        }
+        
+        if (file.size === 0) {
+            showAlert('File is empty', 'error');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function handleFileSelection(file) {
+        currentFile = file;
+        
+        // Update UI
+        document.getElementById('dropZoneTitle').textContent = 'PDF File Selected';
+        document.getElementById('dropZoneText').textContent = 'Ready to generate questions';
+        document.getElementById('dropZoneText').style.color = '#4CAF50';
+        document.getElementById('dropZone').classList.add('has-file');
+        document.getElementById('dropZone').style.borderColor = '#4CAF50';
+        document.getElementById('dropZone').style.background = '#e8f5e8';
+        document.getElementById('dropZone').querySelector('div').textContent = '✅';
+        
+        // Show file info
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        document.getElementById('fileInfo').style.display = 'block';
+        
+        // Enable process button
+        document.getElementById('processBtn').disabled = false;
+        
+        hideAlert();
+        console.log('File selected:', file.name, file.size, file.type);
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    function resetFileSelection() {
+        currentFile = null;
+        document.getElementById('pdfFile').value = '';
+        document.getElementById('processBtn').disabled = true;
+        document.getElementById('fileInfo').style.display = 'none';
+        document.getElementById('dropZone').classList.remove('has-file');
+        document.getElementById('dropZoneTitle').textContent = 'Upload Your PDF Document';
+        document.getElementById('dropZoneText').textContent = 'Drag & drop your PDF file here or click to browse';
+        document.getElementById('dropZoneText').style.color = '';
+        document.getElementById('dropZone').style.borderColor = '#4facfe';
+        document.getElementById('dropZone').style.background = '';
+        document.getElementById('dropZone').querySelector('div').textContent = '📁';
+    }
+    
+    function selectQuestionType(type) {
+        currentQuestionType = type;
+        
+        // Update UI
+        document.querySelectorAll('.type-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+    }
+    
+    async function processPDF() {
+        if (!currentFile) {
+            showAlert('Please select a PDF file first', 'error');
+            return;
+        }
+        
+        try {
+            // Show loading state
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'block';
+            updateProgress(10);
 
-                if (type === 'multiple_choice') {
-                    questionContent = `
-                        <h4>Question ${index + 1} <span class="question-type-badge">Multiple Choice</span></h4>
-                        <p>${q.question}</p>
-                        <div class="options">
-                            ${q.options.map((opt, i) => {
-                                const optionLetter = String.fromCharCode(65 + i);
-                                let optionClass = 'option';
-                                let onClick = '';
-                                
-                                if (!userAnswer) {
-                                    optionClass += ' clickable';
-                                    onClick = `onclick="selectAnswer(${index}, '${optionLetter}')"`;
-                                }
-                                
-                                if (showCorrectAnswer) {
-                                    if (optionLetter === q.correct_answer) {
-                                        optionClass += ' correct';
-                                    } else if (userAnswer && userAnswer.selected === optionLetter) {
-                                        optionClass += ' incorrect';
-                                    }
-                                }
-                                
-                                return `<div class="${optionClass}" ${onClick}>
-                                    <strong>${optionLetter}:</strong> ${opt}
-                                </div>`;
-                            }).join('')}
-                        </div>
-                        ${userAnswer ? `
-                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
-                                <strong>Your answer: ${userAnswer.selected}</strong> 
-                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-                            </div>
-                        ` : ''}
-                        ${showCorrectAnswer && !userAnswer ? `
-                            <div class="correct-answer" style="display: block;">
-                                <strong>Correct Answer: ${q.correct_answer}</strong>
-                            </div>
-                        ` : ''}
-                    `;
-                } else if (type === 'true_false') {
-                    questionContent = `
-                        <h4>Question ${index + 1} <span class="question-type-badge">True or False</span></h4>
-                        <p>${q.question}</p>
-                        <div class="true-false-options">
-                            <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'True' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'True' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
-                                 ${!userAnswer ? `onclick="selectAnswer(${index}, 'True')"` : ''}>
-                                True
-                            </div>
-                            <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'False' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'False' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
-                                 ${!userAnswer ? `onclick="selectAnswer(${index}, 'False')"` : ''}>
-                                False
-                            </div>
-                        </div>
-                        ${userAnswer ? `
-                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
-                                <strong>Your answer: ${userAnswer.selected}</strong> 
-                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-                            </div>
-                        ` : ''}
-                        ${showCorrectAnswer && !userAnswer ? `
-                            <div class="correct-answer" style="display: block;">
-                                <strong>Correct Answer: ${q.correct_answer}</strong>
-                            </div>
-                        ` : ''}
-                    `;
-                } else if (type === 'identification') {
-                    questionContent = `
-                        <h4>Question ${index + 1} <span class="question-type-badge">Identification</span></h4>
-                        <p>${q.question}</p>
-                        ${!userAnswer ? `
-                            <div style="margin: 15px 0;">
-                                <input type="text" id="answer-${index}" placeholder="Type your answer here..." style="width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 5px; font-size: 1em;">
-                                <button class="btn" onclick="submitIdentificationAnswer(${index})" style="margin-top: 10px;">Submit Answer</button>
-                            </div>
-                        ` : ''}
-                        ${userAnswer ? `
-                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
-                                <strong>Your answer: ${userAnswer.selected}</strong> 
-                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-                            </div>
-                        ` : ''}
-                        ${showCorrectAnswer && !userAnswer ? `
-                            <div class="identification-answer correct" style="display: block;">
-                                <strong>Correct Answer: ${q.correct_answer}</strong>
-                            </div>
-                        ` : ''}
-                    `;
-                }
-                
-                questionDiv.innerHTML = questionContent;
-                questionsList.appendChild(questionDiv);
+            const formData = new FormData();
+            formData.append('pdf', currentFile);
+            formData.append('question_type', currentQuestionType);
+            formData.append('num_questions', document.getElementById('numQuestions').value);
+
+            updateProgress(30);
+            document.getElementById('loadingMessage').textContent = 'Uploading PDF...';
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
             });
+
+            const result = await response.json();
             
-            // Show quiz results if all questions answered
-            if (allAnswered) {
-                showQuizResults();
+            if (!response.ok) {
+                throw new Error(result.error || `Server error: ${response.status}`);
             }
-        }
-        
-        function selectAnswer(questionIndex, selectedAnswer) {
-            if (userAnswers[questionIndex]) return;
-            
-            const question = currentQuestions.questions[questionIndex];
-            const isCorrect = selectedAnswer === question.correct_answer;
-            
-            userAnswers[questionIndex] = {
-                selected: selectedAnswer,
-                isCorrect: isCorrect
-            };
-            
-            if (isCorrect) {
-                quizScore++;
-                showAlert('✅ Correct!', 'success');
+
+            if (result.success) {
+                updateProgress(100);
+                document.getElementById('loadingMessage').textContent = 'Questions generated successfully!';
+                
+                currentQuestions = result.questions;
+                currentQuestionType = result.question_type;
+                userAnswers = []; // Reset user answers
+                quizScore = 0; // Reset score
+                displayQuestions(result.questions);
+                showAlert(result.message, 'success');
+                
+                // Save to localStorage
+                localStorage.setItem('generatedQuestions', JSON.stringify(result.questions));
+                localStorage.setItem('questionType', result.question_type);
+                localStorage.setItem('currentFileName', currentFile.name);
+                
             } else {
-                showAlert('❌ Incorrect!', 'error');
+                throw new Error(result.error || 'Unknown error occurred');
             }
             
-            // Update the display
-            displayQuestions(currentQuestions);
+        } catch (error) {
+            console.error('Upload error:', error);
+            showAlert('Processing failed: ' + error.message, 'error');
+            resetToUpload();
+        }
+    }
+
+    // NEW FUNCTION: Generate another batch of questions from the same PDF
+    async function generateNewQuestions() {
+        if (!currentFile) {
+            showAlert('No PDF file available. Please upload a new PDF.', 'error');
+            return;
         }
         
-        function submitIdentificationAnswer(questionIndex) {
-            if (userAnswers[questionIndex]) return;
-            
-            const answerInput = document.getElementById(`answer-${questionIndex}`);
-            const userAnswer = answerInput.value.trim();
-            
-            if (!userAnswer) {
-                showAlert('Please enter an answer', 'error');
-                return;
-            }
-            
-            const question = currentQuestions.questions[questionIndex];
-            const isCorrect = userAnswer.toLowerCase() === question.correct_answer.toLowerCase();
-            
-            userAnswers[questionIndex] = {
-                selected: userAnswer,
-                isCorrect: isCorrect
-            };
-            
-            if (isCorrect) {
-                quizScore++;
-                showAlert('✅ Correct!', 'success');
-            } else {
-                showAlert('❌ Incorrect!', 'error');
-            }
-            
-            displayQuestions(currentQuestions);
-        }
-        
-        function showQuizResults() {
-            const totalQuestions = currentQuestions.questions.length;
-            const percentage = Math.round((quizScore / totalQuestions) * 100);
-            
-            let message = '';
-            if (percentage >= 90) message = '🎉 Excellent! Perfect score!';
-            else if (percentage >= 80) message = '👍 Great job!';
-            else if (percentage >= 70) message = '👏 Good work!';
-            else if (percentage >= 60) message = '💪 Keep practicing!';
-            else message = '📚 Review the material and try again!';
-            
-            const resultsDiv = document.createElement('div');
-            resultsDiv.className = 'quiz-results';
-            resultsDiv.innerHTML = `
-                <h3>Quiz Completed!</h3>
-                <div class="score">${quizScore}/${totalQuestions} (${percentage}%)</div>
-                <p>${message}</p>
-                <div class="btn-group">
-                    <button class="btn" onclick="resetSystem()">📄 Generate New Questions</button>
-                    <button class="btn btn-success" onclick="retryQuiz()">🔄 Try Again</button>
-                </div>
-            `;
-            
-            document.getElementById('questionsList').prepend(resultsDiv);
-            
-            // Scroll to results
-            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        
-        function retryQuiz() {
-            userAnswers = [];
-            quizScore = 0;
-            showingAnswers = false;
-            displayQuestions(currentQuestions);
-            showAlert('Quiz reset! Try answering the questions again.', 'info');
-        }
-        
-        function toggleAnswers() {
-            showingAnswers = !showingAnswers;
-            const button = document.getElementById('toggleAnswersBtn');
-            
-            if (showingAnswers) {
-                button.textContent = '🙈 Hide Answers';
-                button.classList.add('btn-success');
-            } else {
-                button.textContent = '👁️ Show Answers';
-                button.classList.remove('btn-success');
-            }
-            
-            displayQuestions(currentQuestions);
-        }
-        
-        function exportQuestions() {
-            if (!currentQuestions) {
-                showAlert('No questions to export', 'error');
-                return;
-            }
-            
-            const dataStr = JSON.stringify(currentQuestions, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = 'generated-questions.json';
-            link.click();
-            
-            showAlert('Questions exported successfully!', 'success');
-        }
-        
-        function loadExistingQuestions() {
-            try {
-                const savedQuestions = localStorage.getItem('generatedQuestions');
-                const savedType = localStorage.getItem('questionType');
-                if (savedQuestions) {
-                    currentQuestions = JSON.parse(savedQuestions);
-                    currentQuestionType = savedType || 'multiple_choice';
-                    document.getElementById('questionsCount').textContent = currentQuestions.questions.length;
-                    
-                    // Select the correct question type
-                    selectQuestionType(currentQuestionType);
-                }
-            } catch (error) {
-                console.error('Error loading saved questions:', error);
-            }
-        }
-        
-        function resetSystem() {
+        try {
+            // Show loading state
             document.getElementById('questionsSection').style.display = 'none';
-            document.getElementById('uploadSection').style.display = 'block';
-            resetFileSelection();
-            document.getElementById('questionsCount').textContent = '0';
-            currentQuestions = [];
-            userAnswers = [];
-            quizScore = 0;
-            showingAnswers = false;
-            localStorage.removeItem('generatedQuestions');
-            localStorage.removeItem('questionType');
-            hideAlert();
-        }
-        
-        function resetToUpload() {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('progressBar').style.display = 'none';
-            document.getElementById('uploadSection').style.display = 'block';
-        }
-        
-        function updateProgress(percent) {
-            document.getElementById('progress').style.width = percent + '%';
-        }
-        
-        function showAlert(message, type) {
-            const alert = document.getElementById('alertMessage');
-            alert.textContent = message;
-            alert.className = `alert alert-${type}`;
-            alert.style.display = 'block';
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'block';
+            updateProgress(10);
+
+            const formData = new FormData();
+            formData.append('pdf', currentFile);
+            formData.append('question_type', currentQuestionType);
+            formData.append('num_questions', document.getElementById('numQuestions').value);
+
+            updateProgress(30);
+            document.getElementById('loadingMessage').textContent = 'Generating new questions from PDF...';
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
             
-            // Auto-hide success/info messages after 5 seconds
-            if (type === 'success' || type === 'info') {
-                setTimeout(hideAlert, 5000);
+            if (!response.ok) {
+                throw new Error(result.error || `Server error: ${response.status}`);
             }
+
+            if (result.success) {
+                updateProgress(100);
+                document.getElementById('loadingMessage').textContent = 'New questions generated successfully!';
+                
+                currentQuestions = result.questions;
+                userAnswers = []; // Reset user answers
+                quizScore = 0; // Reset score
+                showingAnswers = false; // Reset answer display
+                displayQuestions(result.questions);
+                showAlert('New batch of questions generated!', 'success');
+                
+                // Save to localStorage
+                localStorage.setItem('generatedQuestions', JSON.stringify(result.questions));
+                localStorage.setItem('questionType', currentQuestionType);
+                
+            } else {
+                throw new Error(result.error || 'Unknown error occurred');
+            }
+            
+        } catch (error) {
+            console.error('Error generating new questions:', error);
+            showAlert('Failed to generate new questions: ' + error.message, 'error');
+            resetToUpload();
+        }
+    }
+    
+    function displayQuestions(questions) {
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('questionsSection').style.display = 'block';
+        document.getElementById('questionsCount').textContent = questions.questions.length;
+        
+        // Update question type badge
+        const typeBadge = document.getElementById('currentQuestionType');
+        typeBadge.textContent = currentQuestionType.replace('_', ' ');
+        
+        const questionsList = document.getElementById('questionsList');
+        questionsList.innerHTML = '';
+        
+        // Update the "Generate New Questions" button to use the new function
+        const newQuestionsBtn = document.querySelector('.btn-warning');
+        newQuestionsBtn.textContent = '🔄 Generate New Questions';
+        newQuestionsBtn.onclick = generateNewQuestions;
+        
+        // Check if all questions are answered
+        const allAnswered = userAnswers.length === questions.questions.length;
+        
+        questions.questions.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-card';
+            
+            let questionContent = '';
+            const type = q.type || currentQuestionType;
+            const userAnswer = userAnswers[index];
+            const isCorrect = userAnswer ? userAnswer.isCorrect : false;
+            const showCorrectAnswer = showingAnswers || (userAnswer && allAnswered);
+
+            if (type === 'multiple_choice') {
+                questionContent = `
+                    <h4>Question ${index + 1} <span class="question-type-badge">Multiple Choice</span></h4>
+                    <p>${q.question}</p>
+                    <div class="options">
+                        ${q.options.map((opt, i) => {
+                            const optionLetter = String.fromCharCode(65 + i);
+                            let optionClass = 'option';
+                            let onClick = '';
+                            
+                            if (!userAnswer) {
+                                optionClass += ' clickable';
+                                onClick = `onclick="selectAnswer(${index}, '${optionLetter}')"`;
+                            }
+                            
+                            if (showCorrectAnswer) {
+                                if (optionLetter === q.correct_answer) {
+                                    optionClass += ' correct';
+                                } else if (userAnswer && userAnswer.selected === optionLetter) {
+                                    optionClass += ' incorrect';
+                                }
+                            }
+                            
+                            return `<div class="${optionClass}" ${onClick}>
+                                <strong>${optionLetter}:</strong> ${opt}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                    ${userAnswer ? `
+                        <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                            <strong>Your answer: ${userAnswer.selected}</strong> 
+                            ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                        </div>
+                    ` : ''}
+                    ${showCorrectAnswer && !userAnswer ? `
+                        <div class="correct-answer" style="display: block;">
+                            <strong>Correct Answer: ${q.correct_answer}</strong>
+                        </div>
+                    ` : ''}
+                `;
+            } else if (type === 'true_false') {
+                questionContent = `
+                    <h4>Question ${index + 1} <span class="question-type-badge">True or False</span></h4>
+                    <p>${q.question}</p>
+                    <div class="true-false-options">
+                        <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'True' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'True' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
+                             ${!userAnswer ? `onclick="selectAnswer(${index}, 'True')"` : ''}>
+                            True
+                        </div>
+                        <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'False' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'False' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
+                             ${!userAnswer ? `onclick="selectAnswer(${index}, 'False')"` : ''}>
+                            False
+                        </div>
+                    </div>
+                    ${userAnswer ? `
+                        <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                            <strong>Your answer: ${userAnswer.selected}</strong> 
+                            ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                        </div>
+                    ` : ''}
+                    ${showCorrectAnswer && !userAnswer ? `
+                        <div class="correct-answer" style="display: block;">
+                            <strong>Correct Answer: ${q.correct_answer}</strong>
+                        </div>
+                    ` : ''}
+                `;
+            } else if (type === 'identification') {
+                questionContent = `
+                    <h4>Question ${index + 1} <span class="question-type-badge">Identification</span></h4>
+                    <p>${q.question}</p>
+                    ${!userAnswer ? `
+                        <div style="margin: 15px 0;">
+                            <input type="text" id="answer-${index}" placeholder="Type your answer here..." style="width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 5px; font-size: 1em;">
+                            <button class="btn" onclick="submitIdentificationAnswer(${index})" style="margin-top: 10px;">Submit Answer</button>
+                        </div>
+                    ` : ''}
+                    ${userAnswer ? `
+                        <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                            <strong>Your answer: ${userAnswer.selected}</strong> 
+                            ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                        </div>
+                    ` : ''}
+                    ${showCorrectAnswer && !userAnswer ? `
+                        <div class="identification-answer correct" style="display: block;">
+                            <strong>Correct Answer: ${q.correct_answer}</strong>
+                        </div>
+                    ` : ''}
+                `;
+            }
+            
+            questionDiv.innerHTML = questionContent;
+            questionsList.appendChild(questionDiv);
+        });
+        
+        // Show quiz results if all questions answered
+        if (allAnswered) {
+            showQuizResults();
+        }
+    }
+    
+    function selectAnswer(questionIndex, selectedAnswer) {
+        if (userAnswers[questionIndex]) return;
+        
+        const question = currentQuestions.questions[questionIndex];
+        const isCorrect = selectedAnswer === question.correct_answer;
+        
+        userAnswers[questionIndex] = {
+            selected: selectedAnswer,
+            isCorrect: isCorrect
+        };
+        
+        if (isCorrect) {
+            quizScore++;
+            showAlert('✅ Correct!', 'success');
+        } else {
+            showAlert('❌ Incorrect!', 'error');
         }
         
-        function hideAlert() {
-            document.getElementById('alertMessage').style.display = 'none';
+        // Update the display
+        displayQuestions(currentQuestions);
+    }
+    
+    function submitIdentificationAnswer(questionIndex) {
+        if (userAnswers[questionIndex]) return;
+        
+        const answerInput = document.getElementById(`answer-${questionIndex}`);
+        const userAnswer = answerInput.value.trim();
+        
+        if (!userAnswer) {
+            showAlert('Please enter an answer', 'error');
+            return;
         }
-    </script>
+        
+        const question = currentQuestions.questions[questionIndex];
+        const isCorrect = userAnswer.toLowerCase() === question.correct_answer.toLowerCase();
+        
+        userAnswers[questionIndex] = {
+            selected: userAnswer,
+            isCorrect: isCorrect
+        };
+        
+        if (isCorrect) {
+            quizScore++;
+            showAlert('✅ Correct!', 'success');
+        } else {
+            showAlert('❌ Incorrect!', 'error');
+        }
+        
+        displayQuestions(currentQuestions);
+    }
+    
+    function showQuizResults() {
+        const totalQuestions = currentQuestions.questions.length;
+        const percentage = Math.round((quizScore / totalQuestions) * 100);
+        
+        let message = '';
+        if (percentage >= 90) message = '🎉 Excellent! Perfect score!';
+        else if (percentage >= 80) message = '👍 Great job!';
+        else if (percentage >= 70) message = '👏 Good work!';
+        else if (percentage >= 60) message = '💪 Keep practicing!';
+        else message = '📚 Review the material and try again!';
+        
+        const resultsDiv = document.createElement('div');
+        resultsDiv.className = 'quiz-results';
+        resultsDiv.innerHTML = `
+            <h3>Quiz Completed!</h3>
+            <div class="score">${quizScore}/${totalQuestions} (${percentage}%)</div>
+            <p>${message}</p>
+            <div class="btn-group">
+                <button class="btn btn-warning" onclick="generateNewQuestions()">🔄 Generate New Questions</button>
+                <button class="btn btn-success" onclick="retryQuiz()">🔄 Try Same Questions Again</button>
+            </div>
+        `;
+        
+        document.getElementById('questionsList').prepend(resultsDiv);
+        
+        // Scroll to results
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    function retryQuiz() {
+        userAnswers = [];
+        quizScore = 0;
+        showingAnswers = false;
+        displayQuestions(currentQuestions);
+        showAlert('Quiz reset! Try answering the questions again.', 'info');
+    }
+    
+    function toggleAnswers() {
+        showingAnswers = !showingAnswers;
+        const button = document.getElementById('toggleAnswersBtn');
+        
+        if (showingAnswers) {
+            button.textContent = '🙈 Hide Answers';
+            button.classList.add('btn-success');
+        } else {
+            button.textContent = '👁️ Show Answers';
+            button.classList.remove('btn-success');
+        }
+        
+        displayQuestions(currentQuestions);
+    }
+    
+    function exportQuestions() {
+        if (!currentQuestions) {
+            showAlert('No questions to export', 'error');
+            return;
+        }
+        
+        const dataStr = JSON.stringify(currentQuestions, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'generated-questions.json';
+        link.click();
+        
+        showAlert('Questions exported successfully!', 'success');
+    }
+    
+    function loadExistingQuestions() {
+        try {
+            const savedQuestions = localStorage.getItem('generatedQuestions');
+            const savedType = localStorage.getItem('questionType');
+            const savedFileName = localStorage.getItem('currentFileName');
+            
+            if (savedQuestions) {
+                currentQuestions = JSON.parse(savedQuestions);
+                currentQuestionType = savedType || 'multiple_choice';
+                document.getElementById('questionsCount').textContent = currentQuestions.questions.length;
+                
+                // Select the correct question type
+                selectQuestionType(currentQuestionType);
+                
+                // Show that we have a file ready for generating new questions
+                if (savedFileName) {
+                    showAlert(`Loaded previous questions. You can generate new questions from the same PDF.`, 'info');
+                }
+            }
+        } catch (error) {
+            console.error('Error loading saved questions:', error);
+        }
+    }
+    
+    function resetSystem() {
+        document.getElementById('questionsSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        resetFileSelection();
+        document.getElementById('questionsCount').textContent = '0';
+        currentQuestions = [];
+        userAnswers = [];
+        quizScore = 0;
+        showingAnswers = false;
+        localStorage.removeItem('generatedQuestions');
+        localStorage.removeItem('questionType');
+        localStorage.removeItem('currentFileName');
+        hideAlert();
+    }
+    
+    function resetToUpload() {
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('progressBar').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+    }
+    
+    function updateProgress(percent) {
+        document.getElementById('progress').style.width = percent + '%';
+    }
+    
+    function showAlert(message, type) {
+        const alert = document.getElementById('alertMessage');
+        alert.textContent = message;
+        alert.className = `alert alert-${type}`;
+        alert.style.display = 'block';
+        
+        // Auto-hide success/info messages after 5 seconds
+        if (type === 'success' || type === 'info') {
+            setTimeout(hideAlert, 5000);
+        }
+    }
+    
+    function hideAlert() {
+        document.getElementById('alertMessage').style.display = 'none';
+    }
+</script>
 </body>
 </html>

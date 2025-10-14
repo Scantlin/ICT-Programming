@@ -1,56 +1,111 @@
 {
   "questions": [
     {
-      "question": "What is the primary characteristic of the Digital Age according to the text?",
+      "question": "What is a primary characteristic of the Digital Age mentioned in the text?",
       "options": [
-        "The decline of traditional media",
-        "The rapid growth of digital technologies, especially the Internet",
-        "Increased reliance on face-to-face communication",
-        "A decrease in global connectivity"
+        "The decline of global communication",
+        "The rapid growth of digital technologies, particularly the Internet",
+        "A decrease in medical advancements",
+        "A reduction in cybersecurity awareness"
       ],
       "correct_answer": "B",
       "type": "multiple_choice"
     },
     {
-      "question": "Which of the following best describes cyberbullying as defined in the text?",
+      "question": "Cybersecurity is defined as the practice of protecting what from cyber threats?",
       "options": [
-        "Using digital platforms to steal personal information",
-        "Obtaining unauthorized access to computer systems",
-        "Using digital platforms to harass or intimidate others",
-        "Tricking people into stealing money or personal information"
+        "Physical mail and packages",
+        "Personal conversations and meetings",
+        "Devices, systems, networks, and data",
+        "Traditional media like newspapers and television"
       ],
       "correct_answer": "C",
       "type": "multiple_choice"
     },
     {
-      "question": "According to the text, what is a potential consequence of identity theft?",
+      "question": "Which of the following is an example of cyberbullying as described in the text?",
       "options": [
-        "Receiving unsolicited emails with prizes",
-        "Experiencing unauthorized purchases or fake accounts",
-        "Devices becoming infected with viruses",
-        "Having your online accounts hacked"
+        "A hacker gaining unauthorized access to a company database",
+        "A student spreading false rumors or posting hateful comments on Facebook",
+        "Someone stealing credit card details to make fraudulent purchases",
+        "Receiving a phishing email from a fake bank"
       ],
       "correct_answer": "B",
       "type": "multiple_choice"
     },
     {
-      "question": "What is the purpose of antivirus software as mentioned in the text?",
+      "question": "What is the primary risk associated with identity theft?",
       "options": [
-        "To create strong passwords",
-        "To protect devices from viruses and malware",
-        "To avoid clicking suspicious links",
+        "Getting a virus on your computer",
+        "Being excluded from online games",
+        "Fraudulent use of personal or financial information",
+        "Spreading rumors on social media"
+      ],
+      "correct_answer": "C",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "According to the text, what is a common method for viruses and malware to spread?",
+      "options": [
+        "Physical mail and packages",
+        "Downloads, emails, or unsafe websites",
+        "In-person conversations",
+        "Landline phone calls"
+      ],
+      "correct_answer": "B",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "The text provides an example of a 'phishing' email. What is the purpose of such an email?",
+      "options": [
+        "To provide helpful information about cybersecurity",
+        "To trick people into stealing money or personal information",
+        "To scan devices for viruses",
+        "To send legitimate prize notifications"
+      ],
+      "correct_answer": "B",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "What does hacking involve, as described in the text?",
+      "options": [
+        "Creating strong passwords",
+        "Installing antivirus software",
+        "Obtaining unauthorized access to a system or device",
+        "Clicking on suspicious links"
+      ],
+      "correct_answer": "C",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "Which cybersecurity practice is recommended for creating strong passwords?",
+      "options": [
+        "Using simple and common words",
+        "Using only letters",
+        "Creating unique passwords with letters, numbers, and symbols",
+        "Using your birthdate"
+      ],
+      "correct_answer": "C",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "What is the function of antivirus software as mentioned in the text?",
+      "options": [
+        "To steal personal data from devices",
+        "To scan files for threats and protect against viruses and malware",
+        "To create fake websites for scams",
         "To gain unauthorized access to systems"
       ],
       "correct_answer": "B",
       "type": "multiple_choice"
     },
     {
-      "question": "Which of the following is an example of a cyber threat that involves gaining unauthorized access to a system or device?",
+      "question": "When should users be particularly cautious about clicking links, according to the text?",
       "options": [
-        "Cyberbullying",
-        "Identity Theft",
-        "Online scams",
-        "Hacking"
+        "When they are in unsolicited emails or messages",
+        "When the link promises a prize",
+        "When the sender is unknown",
+        "All of the above"
       ],
       "correct_answer": "D",
       "type": "multiple_choice"
