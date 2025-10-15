@@ -1,27 +1,36 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS
 import PyPDF2
 import google.generativeai as genai
 import json
 import os
+import secrets
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-CORS(app)
-
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
+app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a random secret key
+
+CORS(app)
 
 # Configuration - FREE Google Gemini API
 GEMINI_API_KEY = "AIzaSyD91QFU7xr_IOt02AJWvVGXMqRmRdcn1Cc"  # Get free key from: https://makersuite.google.com/app/apikey
 
+# Simple user storage (in production, use a database)
+users = {
+    'admin': generate_password_hash('admin123')  # Default admin user
+}
+
 class PDFQuestionGenerator:
     def __init__(self, gemini_api_key):
+        self.gemini_api_key = gemini_api_key
         genai.configure(api_key=gemini_api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
-        print("✅ Gemini API configured successfully")
-
+        # Use the correct model name
+        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')  # Updated model name
+        
     def extract_text_from_pdf(self, pdf_path):
         """Extract text content from PDF file"""
         text = ""
@@ -244,11 +253,64 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+def login_required(f):
+    """Decorator to require login for specific routes"""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            return jsonify({'success': False, 'error': 'Authentication required'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({'success': False, 'error': 'Username and password required'})
+    
+    if username in users and check_password_hash(users[username], password):
+        session['logged_in'] = True
+        session['username'] = username
+        return jsonify({'success': True, 'message': 'Login successful'})
+    else:
+        return jsonify({'success': False, 'error': 'Invalid credentials'})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'success': True, 'message': 'Logout successful'})
+
+@app.route('/check-auth')
+def check_auth():
+    if session.get('logged_in'):
+        return jsonify({'authenticated': True, 'username': session.get('username')})
+    return jsonify({'authenticated': False})
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({'success': False, 'error': 'Username and password required'})
+    
+    if username in users:
+        return jsonify({'success': False, 'error': 'Username already exists'})
+    
+    users[username] = generate_password_hash(password)
+    return jsonify({'success': True, 'message': 'Registration successful'})
+
 @app.route('/upload', methods=['POST'])
+@login_required
 def upload_pdf():
     if 'pdf' not in request.files:
         return jsonify({'success': False, 'error': 'No file uploaded'})
@@ -263,7 +325,7 @@ def upload_pdf():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
             
-            print(f"Processing PDF: {filename}")
+            print(f"Processing PDF for user {session.get('username')}: {filename}")
             
             # Get question type from request
             question_type = request.form.get('question_type', 'multiple_choice')
@@ -288,8 +350,8 @@ def upload_pdf():
             
             print(f"Generated {len(questions['questions'])} questions")
             
-            # Save questions to file
-            questions_file = 'generated_questions.json'
+            # Save questions to user-specific file
+            questions_file = f'generated_questions_{session.get("username")}.json'
             with open(questions_file, 'w') as f:
                 json.dump(questions, f, indent=2)
             
@@ -313,15 +375,18 @@ def upload_pdf():
     return jsonify({'success': False, 'error': 'Invalid file type. Please upload a PDF file.'})
 
 @app.route('/questions')
+@login_required
 def get_questions():
     try:
-        with open('generated_questions.json', 'r') as f:
+        questions_file = f'generated_questions_{session.get("username")}.json'
+        with open(questions_file, 'r') as f:
             questions = json.load(f)
         return jsonify(questions)
     except:
         return jsonify({'error': 'No questions generated yet'})
 
 @app.route('/test-gemini')
+@login_required
 def test_gemini():
     """Test endpoint to check if Gemini API is working"""
     try:
@@ -351,7 +416,8 @@ def test_gemini():
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     print("🎓 Starting Educational Assistant Server...")
+    print("🔐 Login system enabled")
+    print("👤 Default credentials: admin / admin123")
     print("📚 Pure software version - No ESP32 integration")
-    print("🔑 API Status:", "Configured" if generator.model else "Using Fallback (No API Key)")
     print("🌐 Open http://localhost:5000 in your browser")
     app.run(host='0.0.0.0', port=5000, debug=True)

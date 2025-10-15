@@ -1,58 +1,58 @@
 {
   "questions": [
     {
-      "question": "What is the fundamental principle of the two-valued logic used by mathematicians as described in the text?",
+      "question": "What is the primary characteristic of the Digital Age as described in the text?",
       "options": [
-        "Every statement is either True or False (Law of the Excluded Middle).",
-        "Every statement can be both True and False simultaneously.",
-        "Statements can have an undefined truth value.",
-        "Logic is subjective and depends on individual interpretation."
-      ],
-      "correct_answer": "A",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "What is the primary purpose of a truth table in sentential logic?",
-      "options": [
-        "To define the meaning of simple statements.",
-        "To determine the truth or falsity of a compound statement based on its components.",
-        "To prove the Law of the Excluded Middle.",
-        "To list all possible logical connectives."
+        "The decline of traditional media",
+        "The rapid growth of digital technologies, especially the Internet",
+        "The widespread adoption of virtual reality",
+        "The increased reliance on analog communication"
       ],
       "correct_answer": "B",
       "type": "multiple_choice"
     },
     {
-      "question": "According to the text, the logical connective 'OR' (represented by \u2228) is inclusive. What does this mean for its truth value?",
+      "question": "Which of the following is an example of cyberbullying?",
       "options": [
-        "It is true only when both components are true.",
-        "It is false only when both components are false.",
-        "It is true if at least one of the components is true, and false otherwise.",
-        "It is true if exactly one of the components is true."
+        "A hacker stealing credit card details",
+        "A student spreading false rumors on social media",
+        "A computer virus corrupting files",
+        "An email asking for login credentials"
+      ],
+      "correct_answer": "B",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "According to the text, what is the main purpose of antivirus software?",
+      "options": [
+        "To create strong passwords",
+        "To protect devices from viruses and malware",
+        "To prevent identity theft",
+        "To avoid suspicious links"
+      ],
+      "correct_answer": "B",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "Which cyber threat involves someone stealing personal or financial information and using it without permission?",
+      "options": [
+        "Cyberbullying",
+        "Online scams",
+        "Identity Theft",
+        "Viruses and Malware"
       ],
       "correct_answer": "C",
       "type": "multiple_choice"
     },
     {
-      "question": "In the context of a logical implication 'If P, then Q', when is the implication considered false?",
+      "question": "The text provides an example of a 'phishing' email as a type of:",
       "options": [
-        "When P is true and Q is true.",
-        "When P is false and Q is false.",
-        "When P is true and Q is false.",
-        "When P is false and Q is true."
+        "Cyberbullying",
+        "Identity Theft",
+        "Hacking",
+        "Online scam"
       ],
-      "correct_answer": "C",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "If a compound statement has three simple component statements (P, Q, and R), how many possible truth value assignments need to be considered when constructing a truth table?",
-      "options": [
-        "3",
-        "6",
-        "8",
-        "9"
-      ],
-      "correct_answer": "C",
+      "correct_answer": "D",
       "type": "multiple_choice"
     }
   ]
