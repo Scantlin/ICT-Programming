@@ -1,54 +1,59 @@
 {
   "questions": [
     {
-      "question": "According to the text, what are the two main phases of industrialization?",
+      "question": "What is the primary characteristic of the Digital Age as described in the text?",
       "options": [
-        "A) The Agrarian Revolution and the Digital Age",
-        "B) The First Industrial Revolution (1750-1850) and the Second Industrial Revolution (1870-1914)",
-        "C) The Bronze Age and the Iron Age",
-        "D) The Early Modern Period and the Contemporary Era"
+        "The decline of traditional media",
+        "The rapid growth of digital technologies, especially the Internet",
+        "The widespread adoption of virtual reality",
+        "The increased reliance on analog communication"
       ],
-      "correct_answer": "B"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "Which invention from the First Industrial Revolution, developed by James Hargreaves, significantly increased textile production by allowing workers to produce multiple threads at once?",
+      "question": "Which of the following is an example of cyberbullying?",
       "options": [
-        "A) Puddling Furnace",
-        "B) Cotton Gin",
-        "C) Spinning Jenny",
-        "D) Macadamized Roads"
+        "A hacker stealing credit card details",
+        "A student spreading false rumors on social media",
+        "A computer virus corrupting files",
+        "An email asking for login credentials"
       ],
-      "correct_answer": "C"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "Nikolaus Otto developed which significant innovation in 1876, enabling a more efficient alternative to steam power?",
+      "question": "According to the text, what is the main purpose of antivirus software?",
       "options": [
-        "A) The first practical telephone",
-        "B) The four-stroke internal combustion engine",
-        "C) The first long-lasting light bulb",
-        "D) The method for macadamized roads"
+        "To create strong passwords",
+        "To protect devices from viruses and malware",
+        "To prevent identity theft",
+        "To avoid suspicious links"
       ],
-      "correct_answer": "B"
+      "correct_answer": "B",
+      "type": "multiple_choice"
     },
     {
-      "question": "What was the primary purpose of the Puddling Furnace, developed by Henry Cort during the First Industrial Revolution?",
+      "question": "Which cyber threat involves someone stealing personal or financial information and using it without permission?",
       "options": [
-        "A) To separate cotton fibers from seeds",
-        "B) To improve transportation networks through better road construction",
-        "C) To remove impurities from pig iron to produce higher-quality wrought iron",
-        "D) To enable real-time conversations over long distances"
+        "Cyberbullying",
+        "Online scams",
+        "Identity Theft",
+        "Viruses and Malware"
       ],
-      "correct_answer": "C"
+      "correct_answer": "C",
+      "type": "multiple_choice"
     },
     {
-      "question": "Who patented the first practical telephone in 1876, an innovation that transformed business and personal interactions?",
+      "question": "The text provides an example of a 'phishing' email as a type of:",
       "options": [
-        "A) Thomas Edison",
-        "B) Karl Benz",
-        "C) Alexander Graham Bell",
-        "D) Eli Whitney"
+        "Cyberbullying",
+        "Identity Theft",
+        "Hacking",
+        "Online scam"
       ],
-      "correct_answer": "C"
+      "correct_answer": "D",
+      "type": "multiple_choice"
     }
   ]
 }

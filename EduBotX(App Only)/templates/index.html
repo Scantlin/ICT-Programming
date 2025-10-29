@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        /* Login Form Styles */
+        .login-section {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        
+        .login-form {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #4facfe;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .switch-form a {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .user-info {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+        }
+        
+        .upload-section {
+            border: 3px dashed #4facfe;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: #e8f4fd;
+            transform: scale(1.02);
+        }
+        
+        .upload-section.has-file {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .question-type-selector {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .type-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .type-option {
+            padding: 15px 25px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 160px;
+        }
+        
+        .type-option:hover {
+            border-color: #4facfe;
+            transform: translateY(-2px);
+        }
+        
+        .type-option.selected {
+            border-color: #4facfe;
+            background: #4facfe;
+            color: white;
+        }
+        
+        .type-option h4 {
+            margin-bottom: 5px;
+        }
+        
+        .type-option p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .status-panel {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .questions-panel {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .question-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .question-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #4facfe;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .option.clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option.clickable:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .option.correct {
+            border-color: #4CAF50;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .identification-answer {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        
+        .identification-answer.correct {
+            border-color: #4CAF50;
+            background: #d4edda;
+        }
+        
+        .true-false-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .true-false-option {
+            padding: 15px 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 100px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .true-false-option.clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .true-false-option.clickable:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .true-false-option.correct {
+            border-color: #4CAF50;
+            background: #d4edda;
+        }
+
+        .true-false-option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .question-status {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .status-correct {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-incorrect {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .status-unanswered {
+            color: #6c757d;
+        }
+        
+        .quiz-results {
+            background: #f8f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #4facfe;
+        }
+
+        .quiz-results .score {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4facfe;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .type-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .type-option {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 EduBot X</h1>
+            <p>Upload PDF → Generate Questions → Interactive Quiz</p>
+        </div>
+        
+        <div class="content">
+            <!-- Toast Notification -->
+            <div id="toast" class="toast"></div>
+            
+            <!-- Login Section -->
+            <div id="loginSection" class="login-section">
+                <div class="login-form" id="loginForm">
+                    <h2 style="text-align: center; margin-bottom: 30px;">🔐 Login</h2>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password">
+                    </div>
+                    <button class="btn" onclick="login()" style="width: 100%;">Login</button>
+                    <div class="switch-form">
+                        <p>Don't have an account? <a onclick="showRegister()">Register here</a></p>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; text-align: center;">
+                        <strong>Demo Credentials:</strong><br>
+                        Username: <code>admin</code><br>
+                        Password: <code>admin123</code>
+                    </div>
+                </div>
+                
+                <div class="login-form" id="registerForm" style="display: none;">
+                    <h2 style="text-align: center; margin-bottom: 30px;">📝 Register</h2>
+                    <div class="form-group">
+                        <label for="regUsername">Username</label>
+                        <input type="text" id="regUsername" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" placeholder="Choose a password">
+                    </div>
+                    <button class="btn" onclick="register()" style="width: 100%;">Register</button>
+                    <div class="switch-form">
+                        <p>Already have an account? <a onclick="showLogin()">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Application (Hidden until logged in) -->
+            <div id="appSection" style="display: none;">
+                <!-- User Info -->
+                <div class="user-info" id="userInfo">
+                    Welcome, <strong id="usernameDisplay"></strong>! 
+                    <button class="btn btn-danger" onclick="logout()" style="margin-left: 15px; padding: 8px 15px; font-size: 0.9em;">Logout</button>
+                </div>
+                
+                <!-- Status Panel -->
+                <div class="status-panel">
+                    <div class="status-item">
+                        <span>System Status:</span>
+                        <span id="systemStatus">Ready</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Questions Generated:</span>
+                        <span id="questionsCount">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Answered:</span>
+                        <span id="answeredCount">0/0</span>
+                    </div>
+                </div>
+                
+                <!-- Upload Section -->
+                <div id="uploadSection">
+                    <div class="upload-section" id="dropZone">
+                        <div style="font-size: 4em; margin-bottom: 20px;">📁</div>
+                        <h3 id="dropZoneTitle">Upload Your PDF Document</h3>
+                        <p id="dropZoneText">Drag & drop your PDF file here or click to browse</p>
+                        <p><small>Supported: Text-based PDF files up to 16MB</small></p>
+                        
+                        <div class="file-info" id="fileInfo">
+                            <strong>Selected file:</strong> <span id="fileName"></span>
+                            <br>
+                            <small>Size: <span id="fileSize"></span></small>
+                        </div>
+                        
+                        <input type="file" id="pdfFile" accept=".pdf" style="display: none;">
+                        <br>
+                        <button class="btn" onclick="document.getElementById('pdfFile').click()">
+                            Choose PDF File
+                        </button>
+                    </div>
+                    
+                    <!-- Question Type Selector -->
+                    <div class="question-type-selector">
+                        <h3>Select Question Type</h3>
+                        <div class="type-options">
+                            <div class="type-option selected" data-type="multiple_choice" onclick="selectQuestionType('multiple_choice')">
+                                <h4>Multiple Choice</h4>
+                                <p>Choose from 4 options</p>
+                            </div>
+                            <div class="type-option" data-type="true_false" onclick="selectQuestionType('true_false')">
+                                <h4>True or False</h4>
+                                <p>True/False statements</p>
+                            </div>
+                            <div class="type-option" data-type="identification" onclick="selectQuestionType('identification')">
+                                <h4>Identification</h4>
+                                <p>Short answer questions</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <label for="numQuestions">Number of Questions:</label>
+                            <select id="numQuestions" style="margin-left: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                                <option value="3">3</option>
+                                <option value="5" selected>5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn" id="processBtn" onclick="processPDF()" disabled>
+                            Generate Questions from PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                
+                <!-- Loading Section -->
+                <div id="loadingSection" class="loading">
+                    <div class="spinner"></div>
+                    <h3>Processing Your PDF</h3>
+                    <p id="loadingMessage">Extracting text and generating questions...</p>
+                    <p><small>This may take a few moments</small></p>
+                </div>
+                
+                <!-- Questions Preview -->
+                <div id="questionsSection" class="questions-panel">
+                    <h2>Generated Questions <span id="currentQuestionType" class="question-type-badge"></span></h2>
+                    
+                    <!-- Quiz Controls -->
+                    <div class="quiz-controls">
+                        <div class="btn-group">
+                            <button class="btn" id="toggleAnswersBtn" onclick="toggleAnswers()">
+                                👁️ Show Answers
+                            </button>
+                            <button class="btn" onclick="exportQuestions()">
+                                📥 Export Questions
+                            </button>
+                            <button class="btn btn-warning" onclick="generateNewQuestions()">
+                                🔄 Generate New Questions
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="questionsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentQuestions = [];
+        let currentFile = null;
+        let currentQuestionType = 'multiple_choice';
+        let showingAnswers = false;
+        let userAnswers = [];
+        let quizScore = 0;
+        let currentUser = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupDragAndDrop();
+        });
+        
+        // Authentication functions
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/check-auth');
+                const result = await response.json();
+                
+                if (result.authenticated) {
+                    currentUser = result.username;
+                    showAppSection();
+                } else {
+                    showLoginSection();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                showLoginSection();
+            }
+        }
+        
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showToast('Please enter both username and password', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = username;
+                    showAppSection();
+                    showToast('Login successful!', 'success');
+                } else {
+                    showToast(result.error, 'error');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+                }
+            } catch (error) {
+                showToast('Login failed. Please try again.', 'error');
+            }
+        }
+        
+        async function register() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            
+            if (!username || !password) {
+                showToast('Please enter both username and password', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('Registration successful! Please login.', 'success');
+                    showLogin();
+                    document.getElementById('username').value = username;
+                    document.getElementById('password').focus();
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch (error) {
+                showToast('Registration failed. Please try again.', 'error');
+            }
+        }
+        
+        async function logout() {
+            try {
+                await fetch('/logout', { method: 'POST' });
+                currentUser = null;
+                currentQuestions = [];
+                userAnswers = [];
+                showLoginSection();
+                showToast('Logged out successfully', 'info');
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        }
+        
+        function showLoginSection() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('appSection').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+        
+        function showAppSection() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('appSection').style.display = 'block';
+            document.getElementById('usernameDisplay').textContent = currentUser;
+            loadExistingQuestions();
+        }
+        
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+        
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+        
+        // ... (rest of the existing JavaScript functions remain the same)
+        // Enhanced Drag and drop functionality
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('pdfFile');
+            
+            // Click to open file dialog
+            dropZone.addEventListener('click', (e) => {
+                // Don't trigger if clicking on button
+                if (e.target.tagName !== 'BUTTON') {
+                    fileInput.click();
+                }
+            });
+            
+            // Drag over event
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
+            
+            // Drag leave event
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            });
+            
+            // Drop event
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                console.log('Files dropped:', files);
+                
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (isValidPDF(file)) {
+                        handleFileSelection(file);
+                    } else {
+                        showToast('Please drop a valid PDF file', 'error');
+                    }
+                }
+            });
+            
+            // File input change event
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (isValidPDF(file)) {
+                        handleFileSelection(file);
+                    } else {
+                        showToast('Please select a valid PDF file', 'error');
+                        resetFileSelection();
+                    }
+                }
+            });
+        }
+        
+        function isValidPDF(file) {
+            // Check if file is PDF
+            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            if (!isPDF) {
+                showToast('Please select a PDF file (.pdf)', 'error');
+                return false;
+            }
+            
+            // Check file size (16MB max)
+            const maxSize = 16 * 1024 * 1024; // 16MB in bytes
+            if (file.size > maxSize) {
+                showToast('File too large. Maximum size is 16MB', 'error');
+                return false;
+            }
+            
+            if (file.size === 0) {
+                showToast('File is empty', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function handleFileSelection(file) {
+            currentFile = file;
+            
+            // Update UI
+            document.getElementById('dropZoneTitle').textContent = 'PDF File Selected';
+            document.getElementById('dropZoneText').textContent = 'Ready to generate questions';
+            document.getElementById('dropZoneText').style.color = '#4CAF50';
+            document.getElementById('dropZone').classList.add('has-file');
+            document.getElementById('dropZone').style.borderColor = '#4CAF50';
+            document.getElementById('dropZone').style.background = '#e8f5e8';
+            document.getElementById('dropZone').querySelector('div').textContent = '✅';
+            
+            // Show file info
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            document.getElementById('fileInfo').style.display = 'block';
+            
+            // Enable process button
+            document.getElementById('processBtn').disabled = false;
+            
+            console.log('File selected:', file.name, file.size, file.type);
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function resetFileSelection() {
+            currentFile = null;
+            document.getElementById('pdfFile').value = '';
+            document.getElementById('processBtn').disabled = true;
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('dropZone').classList.remove('has-file');
+            document.getElementById('dropZoneTitle').textContent = 'Upload Your PDF Document';
+            document.getElementById('dropZoneText').textContent = 'Drag & drop your PDF file here or click to browse';
+            document.getElementById('dropZoneText').style.color = '';
+            document.getElementById('dropZone').style.borderColor = '#4facfe';
+            document.getElementById('dropZone').style.background = '';
+            document.getElementById('dropZone').querySelector('div').textContent = '📁';
+        }
+        
+        function selectQuestionType(type) {
+            currentQuestionType = type;
+            
+            // Update UI
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+        }
+        
+        async function processPDF() {
+            if (!currentFile) {
+                showToast('Please select a PDF file first', 'error');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('loadingSection').style.display = 'block';
+                document.getElementById('progressBar').style.display = 'block';
+                updateProgress(10);
+
+                const formData = new FormData();
+                formData.append('pdf', currentFile);
+                formData.append('question_type', currentQuestionType);
+                formData.append('num_questions', document.getElementById('numQuestions').value);
+
+                updateProgress(30);
+                document.getElementById('loadingMessage').textContent = 'Uploading PDF...';
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || `Server error: ${response.status}`);
+                }
+
+                if (result.success) {
+                    updateProgress(100);
+                    document.getElementById('loadingMessage').textContent = 'Questions generated successfully!';
+                    
+                    currentQuestions = result.questions;
+                    currentQuestionType = result.question_type;
+                    userAnswers = []; // Reset user answers
+                    quizScore = 0; // Reset score
+                    displayQuestions(result.questions);
+                    showToast('Questions generated successfully!', 'success');
+                    
+                    // Save to localStorage
+                    localStorage.setItem('generatedQuestions', JSON.stringify(result.questions));
+                    localStorage.setItem('questionType', result.question_type);
+                    localStorage.setItem('currentFileName', currentFile.name);
+                    
+                } else {
+                    throw new Error(result.error || 'Unknown error occurred');
+                }
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('Processing failed: ' + error.message, 'error');
+                resetToUpload();
+            }
+        }
+
+        // Generate another batch of questions from the same PDF
+        async function generateNewQuestions() {
+            if (!currentFile) {
+                showToast('No PDF file available. Please upload a new PDF.', 'error');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('questionsSection').style.display = 'none';
+                document.getElementById('loadingSection').style.display = 'block';
+                document.getElementById('progressBar').style.display = 'block';
+                updateProgress(10);
+
+                const formData = new FormData();
+                formData.append('pdf', currentFile);
+                formData.append('question_type', currentQuestionType);
+                formData.append('num_questions', document.getElementById('numQuestions').value);
+
+                updateProgress(30);
+                document.getElementById('loadingMessage').textContent = 'Generating new questions from PDF...';
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || `Server error: ${response.status}`);
+                }
+
+                if (result.success) {
+                    updateProgress(100);
+                    document.getElementById('loadingMessage').textContent = 'New questions generated successfully!';
+                    
+                    currentQuestions = result.questions;
+                    userAnswers = []; // Reset user answers
+                    quizScore = 0; // Reset score
+                    showingAnswers = false; // Reset answer display
+                    displayQuestions(result.questions);
+                    showToast('New batch of questions generated!', 'success');
+                    
+                    // Save to localStorage
+                    localStorage.setItem('generatedQuestions', JSON.stringify(result.questions));
+                    localStorage.setItem('questionType', currentQuestionType);
+                    
+                } else {
+                    throw new Error(result.error || 'Unknown error occurred');
+                }
+                
+            } catch (error) {
+                console.error('Error generating new questions:', error);
+                showToast('Failed to generate new questions: ' + error.message, 'error');
+                resetToUpload();
+            }
+        }
+        
+        function displayQuestions(questions) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('questionsSection').style.display = 'block';
+            document.getElementById('questionsCount').textContent = questions.questions.length;
+            
+            // Update answered count - FIXED: Count actual answered questions
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('answeredCount').textContent = `${answeredCount}/${questions.questions.length}`;
+            
+            // Update question type badge
+            const typeBadge = document.getElementById('currentQuestionType');
+            typeBadge.textContent = currentQuestionType.replace('_', ' ');
+            
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            
+            // Check if all questions are answered - FIXED: Check all indices
+            const allAnswered = checkAllQuestionsAnswered(questions.questions.length);
+            
+            questions.questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-card';
+                
+                let questionContent = '';
+                const type = q.type || currentQuestionType;
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer ? userAnswer.isCorrect : false;
+                const showCorrectAnswer = showingAnswers || (allAnswered && userAnswer);
+
+                // Get status indicator
+                let statusIndicator = '';
+                if (userAnswer) {
+                    statusIndicator = `<span class="question-status ${isCorrect ? 'status-correct' : 'status-incorrect'}">${isCorrect ? '✅' : '❌'}</span>`;
+                } else {
+                    statusIndicator = `<span class="question-status status-unanswered">●</span>`;
+                }
+
+                if (type === 'multiple_choice') {
+                    questionContent = `
+                        <h4>Question ${index + 1} ${statusIndicator} <span class="question-type-badge">Multiple Choice</span></h4>
+                        <p>${q.question}</p>
+                        <div class="options">
+                            ${q.options.map((opt, i) => {
+                                const optionLetter = String.fromCharCode(65 + i);
+                                let optionClass = 'option';
+                                let onClick = '';
+                                
+                                if (!userAnswer) {
+                                    optionClass += ' clickable';
+                                    onClick = `onclick="selectAnswer(${index}, '${optionLetter}')"`;
+                                }
+                                
+                                if (showCorrectAnswer) {
+                                    if (optionLetter === q.correct_answer) {
+                                        optionClass += ' correct';
+                                    } else if (userAnswer && userAnswer.selected === optionLetter) {
+                                        optionClass += ' incorrect';
+                                    }
+                                }
+                                
+                                return `<div class="${optionClass}" ${onClick}>
+                                    <strong>${optionLetter}:</strong> ${opt}
+                                </div>`;
+                            }).join('')}
+                        </div>
+                        ${userAnswer ? `
+                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                                <strong>Your answer: ${userAnswer.selected}</strong> 
+                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                            </div>
+                        ` : ''}
+                        ${showCorrectAnswer && !userAnswer ? `
+                            <div class="correct-answer" style="display: block;">
+                                <strong>Correct Answer: ${q.correct_answer}</strong>
+                            </div>
+                        ` : ''}
+                    `;
+                } else if (type === 'true_false') {
+                    questionContent = `
+                        <h4>Question ${index + 1} ${statusIndicator} <span class="question-type-badge">True or False</span></h4>
+                        <p>${q.question}</p>
+                        <div class="true-false-options">
+                            <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'True' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'True' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
+                                 ${!userAnswer ? `onclick="selectAnswer(${index}, 'True')"` : ''}>
+                                True
+                            </div>
+                            <div class="true-false-option ${!userAnswer ? 'clickable' : ''} ${showCorrectAnswer && q.correct_answer === 'False' ? 'correct' : ''} ${userAnswer && userAnswer.selected === 'False' ? (isCorrect ? 'correct' : 'incorrect') : ''}" 
+                                 ${!userAnswer ? `onclick="selectAnswer(${index}, 'False')"` : ''}>
+                                False
+                            </div>
+                        </div>
+                        ${userAnswer ? `
+                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                                <strong>Your answer: ${userAnswer.selected}</strong> 
+                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                            </div>
+                        ` : ''}
+                        ${showCorrectAnswer && !userAnswer ? `
+                            <div class="correct-answer" style="display: block;">
+                                <strong>Correct Answer: ${q.correct_answer}</strong>
+                            </div>
+                        ` : ''}
+                    `;
+                } else if (type === 'identification') {
+                    questionContent = `
+                        <h4>Question ${index + 1} ${statusIndicator} <span class="question-type-badge">Identification</span></h4>
+                        <p>${q.question}</p>
+                        ${!userAnswer ? `
+                            <div style="margin: 15px 0;">
+                                <input type="text" id="answer-${index}" placeholder="Type your answer here..." style="width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 5px; font-size: 1em;">
+                                <button class="btn" onclick="submitIdentificationAnswer(${index})" style="margin-top: 10px;">Submit Answer</button>
+                            </div>
+                        ` : ''}
+                        ${userAnswer ? `
+                            <div style="margin-top: 10px; padding: 10px; border-radius: 5px; background: ${isCorrect ? '#d4edda' : '#f8d7da'};">
+                                <strong>Your answer: ${userAnswer.selected}</strong> 
+                                ${isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+                            </div>
+                        ` : ''}
+                        ${showCorrectAnswer && !userAnswer ? `
+                            <div class="identification-answer correct" style="display: block;">
+                                <strong>Correct Answer: ${q.correct_answer}</strong>
+                            </div>
+                        ` : ''}
+                    `;
+                }
+                
+                questionDiv.innerHTML = questionContent;
+                questionsList.appendChild(questionDiv);
+            });
+            
+            // Show quiz results if all questions are answered - FIXED: Only show when truly all answered
+            if (allAnswered) {
+                showQuizResults();
+            }
+        }
+        
+        // NEW FUNCTION: Check if all questions are answered
+        function checkAllQuestionsAnswered(totalQuestions) {
+            for (let i = 0; i < totalQuestions; i++) {
+                if (!userAnswers[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function selectAnswer(questionIndex, selectedAnswer) {
+            if (userAnswers[questionIndex]) return;
+            
+            const question = currentQuestions.questions[questionIndex];
+            const isCorrect = selectedAnswer === question.correct_answer;
+            
+            userAnswers[questionIndex] = {
+                selected: selectedAnswer,
+                isCorrect: isCorrect
+            };
+            
+            if (isCorrect) {
+                quizScore++;
+                showToast('✅ Correct!', 'success');
+            } else {
+                showToast('❌ Incorrect!', 'error');
+            }
+            
+            // Update the display
+            displayQuestions(currentQuestions);
+        }
+        
+        function submitIdentificationAnswer(questionIndex) {
+            if (userAnswers[questionIndex]) return;
+            
+            const answerInput = document.getElementById(`answer-${questionIndex}`);
+            const userAnswer = answerInput.value.trim();
+            
+            if (!userAnswer) {
+                showToast('Please enter an answer', 'error');
+                return;
+            }
+            
+            const question = currentQuestions.questions[questionIndex];
+            const isCorrect = userAnswer.toLowerCase() === question.correct_answer.toLowerCase();
+            
+            userAnswers[questionIndex] = {
+                selected: userAnswer,
+                isCorrect: isCorrect
+            };
+            
+            if (isCorrect) {
+                quizScore++;
+                showToast('✅ Correct!', 'success');
+            } else {
+                showToast('❌ Incorrect!', 'error');
+            }
+            
+            displayQuestions(currentQuestions);
+        }
+        
+        function showQuizResults() {
+            const totalQuestions = currentQuestions.questions.length;
+            const percentage = Math.round((quizScore / totalQuestions) * 100);
+            
+            let message = '';
+            if (percentage >= 90) message = '🎉 Excellent! Perfect score!';
+            else if (percentage >= 80) message = '👍 Great job!';
+            else if (percentage >= 70) message = '👏 Good work!';
+            else if (percentage >= 60) message = '💪 Keep practicing!';
+            else message = '📚 Review the material and try again!';
+            
+            const resultsDiv = document.createElement('div');
+            resultsDiv.className = 'quiz-results';
+            resultsDiv.innerHTML = `
+                <h3>Quiz Completed!</h3>
+                <div class="score">${quizScore}/${totalQuestions} (${percentage}%)</div>
+                <p>${message}</p>
+                <div class="btn-group">
+                    <button class="btn btn-warning" onclick="generateNewQuestions()">🔄 Generate New Questions</button>
+                    <button class="btn btn-success" onclick="retryQuiz()">🔄 Try Same Questions Again</button>
+                </div>
+            `;
+            
+            document.getElementById('questionsList').prepend(resultsDiv);
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function retryQuiz() {
+            userAnswers = [];
+            quizScore = 0;
+            showingAnswers = false;
+            displayQuestions(currentQuestions);
+            showToast('Quiz reset! Try answering the questions again.', 'info');
+        }
+        
+        function toggleAnswers() {
+            showingAnswers = !showingAnswers;
+            const button = document.getElementById('toggleAnswersBtn');
+            
+            if (showingAnswers) {
+                button.textContent = '🙈 Hide Answers';
+                button.classList.add('btn-success');
+            } else {
+                button.textContent = '👁️ Show Answers';
+                button.classList.remove('btn-success');
+            }
+            
+            displayQuestions(currentQuestions);
+        }
+        
+        function exportQuestions() {
+            if (!currentQuestions) {
+                showToast('No questions to export', 'error');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(currentQuestions, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'generated-questions.json';
+            link.click();
+            
+            showToast('Questions exported successfully!', 'success');
+        }
+        
+        function loadExistingQuestions() {
+            try {
+                const savedQuestions = localStorage.getItem('generatedQuestions');
+                const savedType = localStorage.getItem('questionType');
+                const savedFileName = localStorage.getItem('currentFileName');
+                
+                if (savedQuestions) {
+                    currentQuestions = JSON.parse(savedQuestions);
+                    currentQuestionType = savedType || 'multiple_choice';
+                    document.getElementById('questionsCount').textContent = currentQuestions.questions.length;
+                    
+                    // Select the correct question type
+                    selectQuestionType(currentQuestionType);
+                }
+            } catch (error) {
+                console.error('Error loading saved questions:', error);
+            }
+        }
+        
+        function resetSystem() {
+            document.getElementById('questionsSection').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'block';
+            resetFileSelection();
+            document.getElementById('questionsCount').textContent = '0';
+            document.getElementById('answeredCount').textContent = '0/0';
+            currentQuestions = [];
+            userAnswers = [];
+            quizScore = 0;
+            showingAnswers = false;
+            localStorage.removeItem('generatedQuestions');
+            localStorage.removeItem('questionType');
+            localStorage.removeItem('currentFileName');
+        }
+        
+        function resetToUpload() {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'block';
+        }
+        
+        function updateProgress(percent) {
+            document.getElementById('progress').style.width = percent + '%';
+        }
+        
+        // Toast notification function
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -23,7 +23,7 @@ class PDFQuestionGenerator:
         self.gemini_api_key = gemini_api_key
         genai.configure(api_key=gemini_api_key)
         # Use the correct model name
-        self.model = genai.GenerativeModel('gemini-2.5-flash')  # Updated model name
+        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')  # Updated model name
         
     def extract_text_from_pdf(self, pdf_path):
         """Extract text content from PDF file"""
