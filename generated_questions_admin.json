@@ -1,113 +1,58 @@
 {
   "questions": [
     {
-      "question": "What are the two main phases of industrialization examined in the module?",
+      "question": "What is the main idea discussed about '05 Handout 1A'?",
       "options": [
-        "The Early Industrial Revolution and the Late Industrial Revolution",
-        "The First Industrial Revolution and the Second Industrial Revolution",
-        "The Steam Revolution and the Electricity Revolution",
-        "The Textile Revolution and the Transportation Revolution"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "B",
+      "correct_answer": "A",
       "type": "multiple_choice"
     },
     {
-      "question": "What year is considered the start of the First Industrial Revolution?",
+      "question": "Based on the text, what can be inferred about 'and the internet'?",
       "options": [
-        "1776",
-        "1850",
-        "1750",
-        "1870"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "C",
+      "correct_answer": "A",
       "type": "multiple_choice"
     },
     {
-      "question": "Who invented the Spinning Jenny in 1764?",
+      "question": "What is the primary focus regarding 'focuses on their'?",
       "options": [
-        "Henry Cort",
-        "Eli Whitney",
-        "James Hargreaves",
-        "John Loudon McAdam"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "C",
+      "correct_answer": "A",
       "type": "multiple_choice"
     },
     {
-      "question": "The Puddling Furnace, developed by Henry Cort, was used for what purpose?",
+      "question": "What key point is made about 'Age: The Internet'?",
       "options": [
-        "Separating cotton fibers from seeds",
-        "Producing multiple threads at once",
-        "Improving road construction",
-        "Refining iron to remove impurities"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "D",
+      "correct_answer": "A",
       "type": "multiple_choice"
     },
     {
-      "question": "What was the primary function of the Cotton Gin, invented by Eli Whitney?",
+      "question": "What is the main idea discussed about 'to the practice'?",
       "options": [
-        "To create wrought iron for industrial machinery",
-        "To speed up the separation of cotton fibers from seeds",
-        "To improve the efficiency of textile production by spinning multiple threads",
-        "To facilitate faster transportation through improved roads"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "Macadamized Roads, created by John Loudon McAdam, improved transportation by using what method?",
-      "options": [
-        "Building elevated railways",
-        "Compacted stone layers for better drainage and durability",
-        "Developing steam-powered ships",
-        "Implementing the internal combustion engine"
-      ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "The Second Industrial Revolution brought advancements in which areas?",
-      "options": [
-        "Textile manufacturing and iron refining",
-        "Communication, transportation, and energy",
-        "Agriculture and resource extraction",
-        "Shipbuilding and canal construction"
-      ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "Who patented the first practical telephone in 1876?",
-      "options": [
-        "Nikolaus Otto",
-        "Karl Benz",
-        "Thomas Edison",
-        "Alexander Graham Bell"
-      ],
-      "correct_answer": "D",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "The development of the internal combustion engine in 1876 by Nikolaus Otto provided what?",
-      "options": [
-        "A more efficient method for separating cotton fibers",
-        "A precursor to the electric light bulb",
-        "A more efficient alternative to steam power",
-        "A method for creating higher-quality wrought iron"
-      ],
-      "correct_answer": "C",
-      "type": "multiple_choice"
-    },
-    {
-      "question": "Karl Benz built and patented the first gasoline-powered automobile in which year?",
-      "options": [
-        "1876",
-        "1886",
-        "1879",
-        "1810s"
-      ],
-      "correct_answer": "B",
+      "correct_answer": "A",
       "type": "multiple_choice"
     }
   ]

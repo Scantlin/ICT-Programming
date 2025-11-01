@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change this to a random secret key
+app.config['SECRET_KEY'] = 'KIO'  # Change this to a random secret key
 
 CORS(app)
 
@@ -29,7 +29,7 @@ class PDFQuestionGenerator:
         self.gemini_api_key = gemini_api_key
         genai.configure(api_key=gemini_api_key)
         # Use the correct model name
-        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')  # Updated model name
+        self.model = genai.GenerativeModel('gemini-2.0-flash-lite')  # Updated model name
         
     def extract_text_from_pdf(self, pdf_path):
         """Extract text content from PDF file"""
