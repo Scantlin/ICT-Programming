@@ -1,59 +1,54 @@
 {
   "questions": [
     {
-      "question": "What is the primary characteristic of the Digital Age as described in the text?",
+      "question": "What is the main idea discussed in the text about '05 Handout 1A'?",
       "options": [
-        "The decline of traditional media",
-        "The rapid growth of digital technologies, especially the Internet",
-        "The widespread adoption of virtual reality",
-        "The increased reliance on analog communication"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
+      "correct_answer": "A"
     },
     {
-      "question": "Which of the following is an example of cyberbullying?",
+      "question": "Based on the content, what can be inferred about 'and the internet'?",
       "options": [
-        "A hacker stealing credit card details",
-        "A student spreading false rumors on social media",
-        "A computer virus corrupting files",
-        "An email asking for login credentials"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
+      "correct_answer": "A"
     },
     {
-      "question": "According to the text, what is the main purpose of antivirus software?",
+      "question": "What is the primary focus of the section discussing 'focuses on their'?",
       "options": [
-        "To create strong passwords",
-        "To protect devices from viruses and malware",
-        "To prevent identity theft",
-        "To avoid suspicious links"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "B",
-      "type": "multiple_choice"
+      "correct_answer": "A"
     },
     {
-      "question": "Which cyber threat involves someone stealing personal or financial information and using it without permission?",
+      "question": "What key point is made regarding 'Age: The Internet'?",
       "options": [
-        "Cyberbullying",
-        "Online scams",
-        "Identity Theft",
-        "Viruses and Malware"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "C",
-      "type": "multiple_choice"
+      "correct_answer": "A"
     },
     {
-      "question": "The text provides an example of a 'phishing' email as a type of:",
+      "question": "What conclusion can be drawn from the information about 'to the practice'?",
       "options": [
-        "Cyberbullying",
-        "Identity Theft",
-        "Hacking",
-        "Online scam"
+        "It explains fundamental concepts and principles",
+        "It provides specific examples and case studies",
+        "It describes processes and methodologies",
+        "It presents arguments and perspectives"
       ],
-      "correct_answer": "D",
-      "type": "multiple_choice"
+      "correct_answer": "A"
     }
   ]
 }
