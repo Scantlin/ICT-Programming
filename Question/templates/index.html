@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Question Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        
+        .upload-area.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .browse-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        
+        .browse-btn:hover {
+            background: #0056b3;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .num-questions {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80px;
+        }
+        
+        .generate-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        
+        .generate-btn:hover {
+            background: #218838;
+        }
+        
+        .generate-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .options {
+            list-style: none;
+        }
+        
+        .option {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .correct-answer {
+            margin-top: 10px;
+            padding: 10px;
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            color: #0c5460;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .file-info {
+            margin: 10px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 PDF Question Generator</h1>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-text">Drag & Drop your PDF file here</div>
+            <div class="file-info" id="fileInfo"></div>
+            <button class="browse-btn" onclick="document.getElementById('pdfFile').click()">
+                Or click to browse
+            </button>
+            <input type="file" id="pdfFile" class="file-input" accept=".pdf">
+        </div>
+        
+        <div class="controls">
+            <label for="numQuestions">Number of questions:</label>
+            <input type="number" id="numQuestions" class="num-questions" value="10" min="1" max="20">
+            <button class="generate-btn" id="generateBtn" disabled>Generate Questions</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing PDF and generating questions...</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+        
+        <div class="results" id="results">
+            <h2>Generated Questions</h2>
+            <div id="questionsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const pdfFileInput = document.getElementById('pdfFile');
+        const generateBtn = document.getElementById('generateBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorDiv = document.getElementById('error');
+        const successDiv = document.getElementById('success');
+        const fileInfo = document.getElementById('fileInfo');
+        const questionsContainer = document.getElementById('questionsContainer');
+        
+        let currentFile = null;
+        
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+        
+        uploadArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+        
+        pdfFileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+        
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type === 'application/pdf') {
+                    currentFile = file;
+                    fileInfo.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                    generateBtn.disabled = false;
+                    hideError();
+                    hideSuccess();
+                } else {
+                    showError('Please select a PDF file.');
+                    generateBtn.disabled = true;
+                }
+            }
+        }
+        
+        generateBtn.addEventListener('click', generateQuestions);
+        
+        async function generateQuestions() {
+            if (!currentFile) {
+                showError('Please select a PDF file first.');
+                return;
+            }
+            
+            const numQuestions = document.getElementById('numQuestions').value;
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            hideError();
+            hideSuccess();
+            generateBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('pdf', currentFile);
+            formData.append('num_questions', numQuestions);
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayQuestions(data.questions);
+                    showSuccess(`Successfully generated ${data.total_questions} questions!`);
+                } else {
+                    showError(data.error || 'An error occurred while processing the PDF.');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+        
+        function displayQuestions(questions) {
+            questionsContainer.innerHTML = '';
+            
+            if (questions.length === 0) {
+                questionsContainer.innerHTML = '<p>No questions could be generated from this PDF.</p>';
+                return;
+            }
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                let optionsHtml = '';
+                question.options.forEach((option, optIndex) => {
+                    const isCorrect = optIndex === question.correct_answer;
+                    optionsHtml += `
+                        <li class="option" onclick="toggleAnswer(this, ${isCorrect})">
+                            ${String.fromCharCode(65 + optIndex)}. ${option}
+                        </li>
+                    `;
+                });
+                
+                questionDiv.innerHTML = `
+                    <div class="question-text">${index + 1}. ${question.question}</div>
+                    <ul class="options">${optionsHtml}</ul>
+                    <div class="correct-answer" style="display: none;">
+                        ✅ Correct answer: ${String.fromCharCode(65 + question.correct_answer)}. ${question.options[question.correct_answer]}
+                    </div>
+                `;
+                
+                questionsContainer.appendChild(questionDiv);
+            });
+            
+            results.style.display = 'block';
+        }
+        
+        function toggleAnswer(element, isCorrect) {
+            // Remove any existing selections
+            const options = element.parentElement.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+            
+            // Mark the clicked option
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                // Find and show correct answer
+                const correctOption = options[element.parentElement.querySelector('.correct-answer').dataset.correctIndex];
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+            }
+            
+            // Show correct answer section
+            const correctAnswerDiv = element.parentElement.nextElementSibling;
+            correctAnswerDiv.style.display = 'block';
+        }
+        
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+        
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+        
+        function hideSuccess() {
+            successDiv.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

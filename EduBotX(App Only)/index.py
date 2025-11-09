@@ -5,8 +5,11 @@ import google.generativeai as genai
 import json
 import os
 import secrets
+import time
+import logging
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -17,20 +20,49 @@ app.config['SECRET_KEY'] = 'KIO'  # Change this to a random secret key
 CORS(app)
 
 # Configuration - FREE Google Gemini API
-GEMINI_API_KEY = "AIzaSyD91QFU7xr_IOt02AJWvVGXMqRmRdcn1Cc"  # Get free key from: https://makersuite.google.com/app/apikey
+GEMINI_API_KEY = "AIzaSyD91QFU7xr_IOt02AJWvVGXMqRmRdcn1Cc"
 
 # Simple user storage (in production, use a database)
 users = {
     'admin': generate_password_hash('admin123')  # Default admin user
 }
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class RateLimiter:
+    def __init__(self, max_requests=15, time_window=60):
+        self.max_requests = max_requests
+        self.time_window = time_window
+        self.requests = []
+    
+    def wait_if_needed(self):
+        now = time.time()
+        # Remove requests outside the current time window
+        self.requests = [req_time for req_time in self.requests 
+                        if now - req_time < self.time_window]
+        
+        if len(self.requests) >= self.max_requests:
+            oldest_request = min(self.requests)
+            sleep_time = oldest_request + self.time_window - now
+            if sleep_time > 0:
+                logger.info(f"Rate limit reached. Waiting {sleep_time:.2f} seconds...")
+                time.sleep(sleep_time)
+            # Remove the oldest request after waiting
+            self.requests = self.requests[1:]
+        
+        self.requests.append(now)
+
 class PDFQuestionGenerator:
     def __init__(self, gemini_api_key):
         self.gemini_api_key = gemini_api_key
         genai.configure(api_key=gemini_api_key)
-        # Use the correct model name
-        self.model = genai.GenerativeModel('gemini-2.0-flash-lite')  # Updated model name
-        
+        self.model = genai.GenerativeModel('learnlm-2.0-flash-experimental')
+        self.rate_limiter = RateLimiter(max_requests=10, time_window=60)  # 10 requests per minute
+        self.last_request_time = 0
+        self.min_request_interval = 2  # Minimum 2 seconds between requests
+    
     def extract_text_from_pdf(self, pdf_path):
         """Extract text content from PDF file"""
         text = ""
@@ -43,14 +75,49 @@ class PDFQuestionGenerator:
                         text += page_text + "\n"
                 return text if text.strip() else None
         except Exception as e:
-            print(f"Error reading PDF: {e}")
+            logger.error(f"Error reading PDF: {e}")
             return None
+    
+    def _enforce_rate_limit(self):
+        """Enforce rate limiting between requests"""
+        current_time = time.time()
+        time_since_last_request = current_time - self.last_request_time
+        
+        if time_since_last_request < self.min_request_interval:
+            sleep_time = self.min_request_interval - time_since_last_request
+            time.sleep(sleep_time)
+        
+        self.rate_limiter.wait_if_needed()
+        self.last_request_time = time.time()
+    
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=60),
+        retry=retry_if_exception(lambda e: "429" in str(e) or "500" in str(e) or "503" in str(e))
+    )
+    def _make_api_call(self, prompt):
+        """Make API call with retry logic"""
+        self._enforce_rate_limit()
+        
+        try:
+            response = self.model.generate_content(prompt)
+            return response.text.strip()
+        except Exception as e:
+            error_str = str(e)
+            if "429" in error_str:
+                logger.warning("Rate limit hit, will retry with exponential backoff")
+            elif "500" in error_str or "503" in error_str:
+                logger.warning("Server error, will retry")
+            else:
+                logger.error(f"API error: {e}")
+            raise e
     
     def generate_questions(self, text, question_type="multiple_choice", num_questions=5):
         """Generate questions from text using Google Gemini or fallback"""
-        # If no API key or model, use fallback immediately
-        if not self.model:
-            return self.fallback_question_generation(text, question_type, num_questions)
+        # If text is too long, truncate it
+        if len(text) > 4000:
+            text = text[:4000]
+            logger.info("Text truncated to 4000 characters for API call")
             
         try:
             if question_type == "multiple_choice":
@@ -62,18 +129,20 @@ class PDFQuestionGenerator:
             else:
                 prompt = self._create_multiple_choice_prompt(text, num_questions)
             
-            response = self.model.generate_content(prompt)
-            questions_json = response.text.strip()
+            logger.info(f"Making API call for {num_questions} {question_type} questions")
+            questions_json = self._make_api_call(prompt)
             
             # Clean the response
             questions_json = self._clean_json_response(questions_json)
             
             # Parse JSON
             questions_data = json.loads(questions_json)
+            logger.info(f"Successfully generated {len(questions_data.get('questions', []))} questions")
             return questions_data
             
         except Exception as e:
-            print(f"Gemini API error: {e}")
+            logger.error(f"Gemini API error after retries: {e}")
+            logger.info("Falling back to local question generation")
             return self.fallback_question_generation(text, question_type, num_questions)
     
     def _create_multiple_choice_prompt(self, text, num_questions):
@@ -92,7 +161,7 @@ class PDFQuestionGenerator:
             ]
         }}
 
-        Text content: {text[:3000]}
+        Text content: {text}
 
         Important: Return ONLY the JSON, no other text, no markdown, no explanations.
         Make sure the questions are educational and relevant to the text.
@@ -113,7 +182,7 @@ class PDFQuestionGenerator:
             ]
         }}
 
-        Text content: {text[:3000]}
+        Text content: {text}
 
         Important: Return ONLY the JSON, no other text. Make statements that are clearly true or false based on the text.
         """
@@ -133,7 +202,7 @@ class PDFQuestionGenerator:
             ]
         }}
 
-        Text content: {text[:3000]}
+        Text content: {text}
 
         Important: Return ONLY the JSON, no other text. Create questions that ask to identify specific concepts, terms, or facts.
         """
@@ -189,6 +258,7 @@ class PDFQuestionGenerator:
             
             questions["questions"].append(question)
         
+        logger.info(f"Generated {len(questions['questions'])} fallback questions")
         return questions
     
     def _create_fallback_multiple_choice(self, key_phrase, index):
@@ -325,11 +395,14 @@ def upload_pdf():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
             
-            print(f"Processing PDF for user {session.get('username')}: {filename}")
+            logger.info(f"Processing PDF for user {session.get('username')}: {filename}")
             
             # Get question type from request
             question_type = request.form.get('question_type', 'multiple_choice')
             num_questions = int(request.form.get('num_questions', 5))
+            
+            # Limit number of questions to avoid excessive API calls
+            num_questions = min(num_questions, 10)  # Max 10 questions per request
             
             # Extract text from PDF
             text = generator.extract_text_from_pdf(filepath)
@@ -338,8 +411,8 @@ def upload_pdf():
                 os.remove(filepath)
                 return jsonify({'success': False, 'error': 'Could not extract text from PDF. The PDF might be scanned or image-based.'})
             
-            print(f"Extracted {len(text)} characters")
-            print(f"Generating {num_questions} {question_type} questions")
+            logger.info(f"Extracted {len(text)} characters")
+            logger.info(f"Generating {num_questions} {question_type} questions")
             
             # Generate questions
             questions = generator.generate_questions(text, question_type, num_questions)
@@ -348,7 +421,7 @@ def upload_pdf():
                 os.remove(filepath)
                 return jsonify({'success': False, 'error': 'Failed to generate questions. Please try again.'})
             
-            print(f"Generated {len(questions['questions'])} questions")
+            logger.info(f"Generated {len(questions['questions'])} questions")
             
             # Save questions to user-specific file
             questions_file = f'generated_questions_{session.get("username")}.json'
@@ -367,7 +440,7 @@ def upload_pdf():
             })
             
         except Exception as e:
-            print(f"Error in upload: {e}")
+            logger.error(f"Error in upload: {e}")
             if 'filepath' in locals() and os.path.exists(filepath):
                 os.remove(filepath)
             return jsonify({'success': False, 'error': str(e)})
@@ -420,4 +493,5 @@ if __name__ == '__main__':
     print("👤 Default credentials: admin / admin123")
     print("📚 Pure software version - No ESP32 integration")
     print("🌐 Open http://localhost:5000 in your browser")
+    print("⚡ Rate limiting enabled: 10 requests per minute")
     app.run(host='0.0.0.0', port=5000, debug=True)
