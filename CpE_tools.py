@@ -88,7 +88,7 @@ class Main:
 
     def marginal(self):
         print('---------------------------- Marginal Revenue ----------------------------')
-        x = sp.Symbol("x")
+        x = sp.symbols("x")
         function = input('Enter your function: ')
         units = int(input('Enter the units: '))
         sparse_function = sp.parse_expr(function, transformations='all') #transform the input function into python's operation system
