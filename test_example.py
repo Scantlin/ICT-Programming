@@ -1,2 +1,3 @@
-def test_sample():
-    assert 1 + 1 == 2
+class TestCalculator:
+    def test_multiply(self):
+        assert 2 * 3 == 6
