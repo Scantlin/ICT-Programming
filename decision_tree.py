@@ -1,46 +1,42 @@
-from sklearn.model_selection import train_test_split #to split the dataset into train and test
-from sklearn.tree import DecisionTreeRegressor #tree model
-from sklearn.metrics import mean_absolute_error, mean_squared_error #to study the accuracy
-from sklearn.preprocessing import OneHotEncoder #to convert categorical data into numerical
-from sklearn.compose import ColumnTransformer #to transform it into columns
-from sklearn.linear_model import LinearRegression #simple linear regression model
-from sklearn.ensemble import RandomForestRegressor #random forest model
-import pandas as pd
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 import numpy as np
-import seaborn as sns #to load datesets
+import pandas as pd
 
 def main():
-    data = sns.load_dataset('tips') #load dateset
+    # Generate sample data
+    Data = pd.read_csv('Salary_dataset.csv')
 
-    categorical_var =  data.select_dtypes(include=['object', 'category']).columns.tolist()
+    X = Data[['YearsExperience']]
+    y = Data['Salary']
 
-    #get dummies using pandas
-    #get_dummies = pd.get_dummies(data, columns=categorical_var)
-    #print(get_dummies)
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    #Independent Variable and Dependent Variable
-    Independent_var = data.drop(['tip'], axis=1)
-    Depedendent_var = data['tip']
+    # Train a decision tree (to find splits)
+    tree = DecisionTreeRegressor(max_depth=3)
+    tree.fit(X_train, y_train)
 
-    #Split the dataset into train and test
-    X_train, X_test, y_train, y_test = train_test_split(Independent_var, Depedendent_var, test_size=0.2, random_state=42)
+    # Get leaf indices for training data
+    leaf_ids = tree.apply(X_train)
 
-    #Transform the categorical data
-    processing = ColumnTransformer(transformers=[('category', OneHotEncoder(), categorical_var)], remainder='passthrough', verbose_feature_names_out=False)
+    # Fit linear regression in each leaf
+    linear_models = {}
+    for leaf in np.unique(leaf_ids):
+        mask = (leaf_ids == leaf)
+        lm = LinearRegression().fit(X_train[mask], y_train[mask])
+        linear_models[leaf] = lm
 
-    X_train_encoded = processing.fit_transform(X_train)
-    X_test_encoded = processing.transform(X_test)
+    # Predict
+    test_leaf_ids = tree.apply(X_test)
+    y_pred = np.array([linear_models[leaf].predict(X_test[i:i+1])[0] 
+                       for i, leaf in enumerate(test_leaf_ids)])
 
-    #model
-    model1 = RandomForestRegressor(random_state=42).fit(X_train_encoded, y_train)
-    model = LinearRegression().fit(X_train_encoded, y_train) #got the highest
-    model2 = DecisionTreeRegressor(random_state=42).fit(X_train_encoded, y_train)
-
-    #predict
-    predict = model.predict(X_test_encoded)
-    print(predict)
-    print(y_test.tolist())
-    print(round(mean_absolute_error(y_test, predict), 2) * 100)
+    # Compare with pure decision tree
+    pure_tree_pred = tree.predict(X_test)
+    print("Linear Tree MSE:", np.mean((y_pred - y_test)**2))
+    print("Pure Tree MSE:", np.mean((pure_tree_pred - y_test)**2))
 
 if __name__ == '__main__':
     main()
