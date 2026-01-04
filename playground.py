@@ -16,16 +16,19 @@ class bag_words:
                 if self.word in self.words:
                     pass
                 else:
-                    self.words.append(self.word)
+                    if len(self.word) > 1:
+                        self.words.append(self.word)
+                    else:
+                        pass
     def call(self):
         self.sentence()
         self.words.sort()
         return self.words
 
-if __name__ == "__main__":
+'''if __name__ == "__main__":
     user_input_num = int(input("Enter the number of sentence: "))
     start = bag_words(user_input_num).call()
-    print(start)
+    print(start)'''
 
 '''
 num_sentence = int(input("Enter the number of sentences: "))
@@ -41,3 +44,24 @@ for i in range(num_sentence):
             words.append(word)
 
 print(words)'''
+
+output = []
+
+letters = ['Book', 'Fit', 'Great', 'Is', 'Love', 'Shoes', 'The', 'This']
+
+sentence = "I love the book".split(" ")
+sentence = [word.capitalize() for word in sentence]
+
+for word in letters:
+    output.append(sentence.count(word))
+
+print(output)
+
+bucket = []
+
+for i in range(3):
+    bucket.append([])
+
+bucket[0].append("I am beautiful")
+print(bucket)
+
