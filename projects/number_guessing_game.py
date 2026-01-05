@@ -9,11 +9,14 @@ class number_guessing_game:
         self.guess = guess
         if self.guess == self.number:
             print("You guessed it right!")
+            return False
         else:
             print("not right")
+            return True
         
 if __name__ == "__main__":
     game = number_guessing_game()
-    while True:
+    playing = True
+    while playing:
         guess_input = int(input("Enter your guess: "))
-        game.play(guess_input)
+        playing = game.play(guess_input)
