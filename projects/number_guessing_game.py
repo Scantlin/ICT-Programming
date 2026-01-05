@@ -9,4 +9,4 @@ class number_guessing_game:
         print()
 
 if __name__ == "__main__":
-    print(number_guessing_game().number)
+    game = number_guessing_game()
