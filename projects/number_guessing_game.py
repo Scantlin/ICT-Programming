@@ -1,13 +1,20 @@
 import random
+import time
 
 class number_guessing_game:
     def __init__(self):
-        print("----- Welcome to Guessing Game -----")
         self.number = random.randint(0, 10)
         self.conti = True
     
-    def play(self, guess):
-        self.guess = guess
+    def clean_line(self, n=1):
+        for _ in range(n):
+            print("\033[A\033[2K", end="")
+    
+    def play(self):
+        print("-----Welcome to Guessing Game-----")
+        print("Number: _")
+        self.guess = int(input("Your guess: "))
+
         if self.guess == self.number:
             print("You guessed it right!")
             self.conti = False
@@ -17,12 +24,13 @@ class number_guessing_game:
             print("higher your guess")
         else:
             print("You input invalid number")
-
+        
+        time.sleep(1)
+        self.clean_line(4)
         return self.conti
         
 if __name__ == "__main__":
     game = number_guessing_game()
     playing = True
     while playing:
-        guess_input = int(input("Enter your guess: "))
-        playing = game.play(guess_input)
+        playing = game.play()
